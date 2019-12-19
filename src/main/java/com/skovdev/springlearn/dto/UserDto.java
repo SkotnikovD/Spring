@@ -11,6 +11,8 @@ import java.util.Date;
 @Accessors(chain = true)
 public class UserDto {
 
+    private String login;
+
     private String name;
 
     private Date birthday;

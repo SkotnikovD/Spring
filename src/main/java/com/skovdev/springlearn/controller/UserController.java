@@ -1,6 +1,7 @@
 package com.skovdev.springlearn.controller;
 
 import com.skovdev.springlearn.dto.UserDto;
+import com.skovdev.springlearn.dto.UserWithCredentialsDto;
 import com.skovdev.springlearn.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,8 +17,8 @@ public class UserController {
     private UserService userService;
 
     @PostMapping(value = "/register")
-    public UserDto registerNewUser(@RequestBody UserDto user) {
-        return userService.registerNewUser(user);
+    public UserDto registerNewUser(@RequestBody UserWithCredentialsDto userWithCredentialsDto) {
+        return userService.registerNewUser(userWithCredentialsDto);
         //TODO Don't forget to integrate Exception Handler
     }
 

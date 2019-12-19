@@ -1,20 +1,16 @@
-package com.skovdev.springlearn.model;
+package com.skovdev.springlearn.dto;
 
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-import java.util.Date;
-
-@Getter
 @Setter
+@Getter
 @Accessors(chain = true)
-public class User {
+public class UserCredentialsDto {
 
     private String login;
 
-    private String name;
-
-    private Date birthday;
+    private String password;
 
 }
