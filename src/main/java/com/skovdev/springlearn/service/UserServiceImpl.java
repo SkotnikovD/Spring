@@ -6,8 +6,10 @@ import com.skovdev.springlearn.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import static com.skovdev.springlearn.dto.mapper.UserMapper.toModel;
+import java.util.Optional;
+
 import static com.skovdev.springlearn.dto.mapper.UserMapper.toDto;
+import static com.skovdev.springlearn.dto.mapper.UserMapper.toModel;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -20,5 +22,10 @@ public class UserServiceImpl implements UserService {
         return toDto(userRepository.createUser(
                 toModel(userWithCredentialsDto.getUserDto()),
                 userWithCredentialsDto.getPassword()));
+    }
+
+    @Override
+    public Optional<UserDto> getUser(String login) {
+        return toDto(userRepository.getUser(login));
     }
 }

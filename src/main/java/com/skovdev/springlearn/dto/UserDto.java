@@ -6,6 +6,8 @@ import lombok.experimental.Accessors;
 
 import java.util.Date;
 
+//TODO Should we use DTO at all?
+// https://medium.com/walmartlabs/java-on-the-benefits-of-treating-dtos-as-magic-cookies-fd7d2e0207a5
 @Getter
 @Setter
 @Accessors(chain = true)
