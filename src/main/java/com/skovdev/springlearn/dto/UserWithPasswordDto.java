@@ -2,14 +2,16 @@ package com.skovdev.springlearn.dto;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
-@Setter
 @Getter
+@Setter
 @Accessors(chain = true)
-public class UserCredentialsDto {
+@ToString
+public class UserWithPasswordDto {
 
-    private String login;
+    private UserDto userDto;
 
     private String password;
 

@@ -19,11 +19,15 @@ public class UserMapper {
         return user.map(UserMapper::toDto);
     }
 
-        public static User toModel(UserDto userDto) {
+    public static User toModel(UserDto userDto) {
         return new User()
                 .setName(userDto.getName())
                 .setBirthday(userDto.getBirthday())
                 .setLogin(userDto.getLogin());
+    }
+
+    public static User toModel(UserDto userDto, String password) {
+        return toModel(userDto).setPassword(password);
     }
 
 
