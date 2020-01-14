@@ -1,7 +1,6 @@
 package com.skovdev.springlearn.service;
 
 import com.skovdev.springlearn.dto.UserDto;
-import com.skovdev.springlearn.dto.UserWithPasswordDto;
 import com.skovdev.springlearn.model.User;
 import com.skovdev.springlearn.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,15 +23,17 @@ public class UserServiceImpl implements UserService {
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
-    public UserDto registerNewUser(UserWithPasswordDto userWithPasswordDto) {
+    public UserDto registerNewUser(UserDto userDto) {
         //TODO check if the user is already exists
-        User user = toModel(userWithPasswordDto.getUserDto());
-        String passwordHash = bCryptPasswordEncoder.encode(userWithPasswordDto.getPassword());
-        return toDto(userRepository.createUser(user, passwordHash));
+        userDto.setPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
+        User user = toModel(userDto);
+        return toDto(userRepository.createUser(user));
     }
 
     @Override
-    public Optional<UserDto> getUser(String login) {
-        return toDto(userRepository.getUser(login));
+    public Optional<UserDto> getUser(String login, boolean isExcludePass) {
+        Optional<UserDto> userDto = toDto(userRepository.getUser(login));
+        if (isExcludePass){userDto.ifPresent( user -> user.setPassword(null));}
+        return userDto;
     }
 }

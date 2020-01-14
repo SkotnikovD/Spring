@@ -5,7 +5,7 @@ import com.skovdev.springlearn.model.User;
 import java.util.Optional;
 
 public interface UserRepository {
-    User createUser(User user, String password);
+    User createUser(User user);
 
     Optional<User> getUser(String login);
 }

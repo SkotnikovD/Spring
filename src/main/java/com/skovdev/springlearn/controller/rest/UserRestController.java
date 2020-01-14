@@ -1,7 +1,6 @@
-package com.skovdev.springlearn.controller;
+package com.skovdev.springlearn.controller.rest;
 
 import com.skovdev.springlearn.dto.UserDto;
-import com.skovdev.springlearn.dto.UserWithPasswordDto;
 import com.skovdev.springlearn.service.UserService;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,13 +22,14 @@ public class UserRestController {
     @GetMapping()
     public UserDto getUser(@RequestParam("login") String login) {
         //TODO How to tell Jackson to treat null Optional as empty body?
-        return userService.getUser(login).orElse(null);
+        return userService.getUser(login, true).orElse(null);
         //TODO Don't forget to integrate Exception Handler
     }
 
     @PostMapping()
-    public UserDto createUser(@RequestBody UserWithPasswordDto userWithPasswordDto){
-        return userService.registerNewUser(userWithPasswordDto);
+    @RequestMapping("/signup")
+    public UserDto createUser(@RequestBody UserDto userDto){
+        return userService.registerNewUser(userDto);
     }
 
 }
