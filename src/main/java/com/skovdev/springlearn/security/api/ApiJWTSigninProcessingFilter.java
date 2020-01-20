@@ -1,7 +1,7 @@
 package com.skovdev.springlearn.security.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.skovdev.springlearn.dto.UserDto;
+import com.skovdev.springlearn.dto.CredentialsDto;
 import com.skovdev.springlearn.dto.mapper.RoleMapper;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -24,10 +24,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.skovdev.springlearn.security.SecurityConstants.*;
+import static com.skovdev.springlearn.security.SecurityConstants.AUTH_HEADER_STRING;
+import static com.skovdev.springlearn.security.SecurityConstants.AUTH_SECRET;
+import static com.skovdev.springlearn.security.SecurityConstants.AUTH_TOCKEN_EXPIRATION_TIME;
+import static com.skovdev.springlearn.security.SecurityConstants.AUTH_TOKEN_PREFIX;
 
 
 public class ApiJWTSigninProcessingFilter extends UsernamePasswordAuthenticationFilter {
+    public static final String ROLES_KEY = "roles";
     private AuthenticationManager authenticationManager;
 
     public ApiJWTSigninProcessingFilter(AuthenticationManager authenticationManager) {
@@ -39,12 +43,12 @@ public class ApiJWTSigninProcessingFilter extends UsernamePasswordAuthentication
     public Authentication attemptAuthentication(HttpServletRequest req,
                                                 HttpServletResponse res) throws AuthenticationException {
         try {
-            UserDto user = new ObjectMapper().readValue(req.getInputStream(), UserDto.class);
+            CredentialsDto credentialsDto = new ObjectMapper().readValue(req.getInputStream(), CredentialsDto.class);
             return authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
-                            user.getLogin(),
-                            user.getPassword(),
-                            new ArrayList<>(RoleMapper.toGrantedAuthorities(user.getRoles()))));
+                            credentialsDto.getLogin(),
+                            credentialsDto.getPassword(),
+                            new ArrayList<>(RoleMapper.toGrantedAuthorities(credentialsDto.getRoles()))));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -60,7 +64,7 @@ public class ApiJWTSigninProcessingFilter extends UsernamePasswordAuthentication
             String login = user.getUsername();
             Claims claims = Jwts.claims().setSubject(login);
             List<String> roles = user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
-            claims.put("roles", roles);
+            claims.put(ROLES_KEY, roles);
             String token = Jwts.builder()
                     .setClaims(claims)
                     .setExpiration(new Date(System.currentTimeMillis() + AUTH_TOCKEN_EXPIRATION_TIME))

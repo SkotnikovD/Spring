@@ -21,8 +21,12 @@ import java.util.stream.Collectors;
 import static com.skovdev.springlearn.security.SecurityConstants.AUTH_HEADER_STRING;
 import static com.skovdev.springlearn.security.SecurityConstants.AUTH_SECRET;
 import static com.skovdev.springlearn.security.SecurityConstants.AUTH_TOKEN_PREFIX;
+import static com.skovdev.springlearn.security.api.ApiJWTSigninProcessingFilter.ROLES_KEY;
 
 
+//TODO It doesn't seem that BasicAuthenticationFilter is a good choice for REST security.
+// Should try this: https://habr.com/ru/post/278411/
+// and then try OAuth2
 public class ApiJWTAuthenticationProcessingFilter extends BasicAuthenticationFilter {
     public ApiJWTAuthenticationProcessingFilter(AuthenticationManager authManager) {
         super(authManager);
@@ -53,7 +57,7 @@ public class ApiJWTAuthenticationProcessingFilter extends BasicAuthenticationFil
             String user = claims.getSubject();
             Assert.notNull(user);
             // Extract the Roles
-            List<String> roles = (List<String>) claims.get("roles");
+            List<String> roles = (List<String>) claims.get(ROLES_KEY);
             // Then convert Roles to GrantedAuthority Object for injecting
             List<GrantedAuthority> grantedAuthorities = roles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
             return new UsernamePasswordAuthenticationToken(user, null, grantedAuthorities);
