@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 public class UserMapper {
     public static UserDto toDto(User user) {
         return new UserDto()
-                .setBirthday(user.getBirthday())
+                .setBirthdayDate(user.getBirthday())
                 .setName(user.getName())
                 .setLogin(user.getLogin())
                 .setPassword(user.getPassword()) //TODO need password for authentication, but shouldn't pass it to api. Solution: several toDto methods with different logic against password?
@@ -25,7 +25,7 @@ public class UserMapper {
     public static User toModel(UserDto userDto) {
         return new User()
                 .setName(userDto.getName())
-                .setBirthday(userDto.getBirthday())
+                .setBirthday(userDto.getBirthdayDate())
                 .setLogin(userDto.getLogin())
                 .setPassword(userDto.getPassword())
                 .setRoles(userDto.getRoles().stream().map(RoleMapper::toModel).collect(Collectors.toSet()));

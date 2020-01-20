@@ -20,7 +20,7 @@ public class UserDto {
 
     private String name;
 
-    private Date birthday;
+    private Date birthdayDate;
 
     private Set<RoleDto> roles;
 
