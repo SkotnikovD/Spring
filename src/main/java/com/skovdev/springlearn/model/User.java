@@ -1,8 +1,11 @@
 package com.skovdev.springlearn.model;
 
+import com.google.common.collect.ImmutableSet;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.springframework.lang.Nullable;
 
 import java.util.Date;
 import java.util.Set;
@@ -12,14 +15,22 @@ import java.util.Set;
 @Accessors(chain = true)
 public class User {
 
+    private long userId;
+
     private String login;
 
     private String password;
 
-    private String name;
+    private String firstName;
 
-    private Date birthday;
+    private Date birthdayDate;
 
+    @Setter (AccessLevel.NONE)
+    @Nullable
     private Set<Role> roles;
 
+    public User setRoles (Role ...role){
+        roles = ImmutableSet.copyOf(role);
+        return this;
+    }
 }

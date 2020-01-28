@@ -11,11 +11,11 @@ import java.util.stream.Collectors;
 public class UserMapper {
     public static UserDto toDto(User user) {
         return new UserDto()
-                .setBirthdayDate(user.getBirthday())
-                .setName(user.getName())
+                .setBirthdayDate(user.getBirthdayDate())
+                .setName(user.getFirstName())
                 .setLogin(user.getLogin())
-                .setPassword(user.getPassword()) //TODO need password for authentication, but shouldn't pass it to api. Solution: several toDto methods with different logic against password?
-                .setRoles(user.getRoles().stream().map(RoleMapper::toDto).collect(Collectors.toSet()));
+                .setPassword(user.getPassword())
+                .setRoles(user.getRoles() != null ? user.getRoles().stream().map(RoleMapper::toDto).collect(Collectors.toSet()) : null);
     }
 
     public static Optional<UserDto> toDto(Optional<User> user) {
@@ -24,11 +24,11 @@ public class UserMapper {
 
     public static User toModel(UserDto userDto) {
         return new User()
-                .setName(userDto.getName())
-                .setBirthday(userDto.getBirthdayDate())
+                .setFirstName(userDto.getName())
+                .setBirthdayDate(userDto.getBirthdayDate())
                 .setLogin(userDto.getLogin())
-                .setPassword(userDto.getPassword())
-                .setRoles(userDto.getRoles().stream().map(RoleMapper::toModel).collect(Collectors.toSet()));
+                .setPassword(userDto.getPassword());
+        //.setRoles(userDto.getRoles().stream().map(RoleMapper::toModel).collect(Collectors.toSet())); //Security layer is responsible for role assigning.
     }
 
     public static User toModel(UserDto userDto, String password) {

@@ -1,6 +1,7 @@
 package com.skovdev.springlearn.service;
 
 import com.skovdev.springlearn.dto.UserDto;
+import com.skovdev.springlearn.model.Role;
 import com.skovdev.springlearn.model.User;
 import com.skovdev.springlearn.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,19 +16,24 @@ import static com.skovdev.springlearn.dto.mapper.UserMapper.toModel;
 @Service
 public class UserServiceImpl implements UserService {
 
-    //TODO should I inject services by constructor, non by field?
-    @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
+
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+    public UserServiceImpl(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
+        this.userRepository = userRepository;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+    }
 
     @Override
     public UserDto registerNewUser(UserDto userDto) {
         //TODO check if the user is already exists
-        userDto.setPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
         User user = toModel(userDto);
-        return toDto(userRepository.createUser(user));
+        user.setPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
+        user.setRoles(Role.of(Role.ROLE_USER));
+        userRepository.createUser(user);
+        return getUser(user.getLogin(), true).get();
     }
 
     @Override

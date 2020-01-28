@@ -19,8 +19,8 @@ CREATE TABLE user_roles (
 
 CREATE TABLE users_to_user_roles (
   users_to_user_roles_id INT AUTO_INCREMENT PRIMARY KEY,
-  user_role_id INT, FOREIGN KEY(user_role_id) REFERENCES user_roles(user_role_id),
-  user_id INT, FOREIGN KEY(user_id) REFERENCES users(user_id) ON DELETE CASCADE
+  user_role_id_fk INT, FOREIGN KEY(user_role_id) REFERENCES user_roles(user_role_id),
+  user_id_fk INT, FOREIGN KEY(user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
 
 INSERT INTO user_roles (role) VALUES

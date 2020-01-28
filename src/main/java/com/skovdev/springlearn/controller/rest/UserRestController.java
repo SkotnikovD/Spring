@@ -21,13 +21,14 @@ public class UserRestController {
 
     @GetMapping()
     public UserDto getUser(@RequestParam("login") String login) {
-        //TODO How to tell Jackson to treat null Optional as empty body?
+        //TODO must return 404 response for unexisted user
         return userService.getUser(login, true).orElse(null);
         //TODO Don't forget to integrate Exception Handler
     }
 
     @PostMapping()
     @RequestMapping("/signup")
+    //TODO Setup Jackson to produce error if incoming object has unknown properties(fields)
     public UserDto createUser(@RequestBody UserDto userDto){
         return userService.registerNewUser(userDto);
     }
