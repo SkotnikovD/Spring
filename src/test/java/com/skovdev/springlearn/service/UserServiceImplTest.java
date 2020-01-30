@@ -33,9 +33,6 @@ class UserServiceImplTest {
     @Mock
     UserRepository userRepositoryMock;
 
-    private static User u;
-
-
     @BeforeEach
     void init() {
         MockitoAnnotations.initMocks(this);
