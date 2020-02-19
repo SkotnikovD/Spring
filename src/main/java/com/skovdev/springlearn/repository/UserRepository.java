@@ -8,4 +8,6 @@ public interface UserRepository {
     void createUser(User user);
 
     Optional<User> getUser(String login);
+
+    Optional<User> getUser(long id);
 }

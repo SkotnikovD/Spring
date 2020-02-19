@@ -49,6 +49,7 @@ public class ApiJWTSigninProcessingFilter extends UsernamePasswordAuthentication
                             credentialsDto.getLogin(),
                             credentialsDto.getPassword(),
                             new ArrayList<>(RoleMapper.toGrantedAuthorities(credentialsDto.getRoles()))));
+            //TODO Seemed like setting roles, received from client is super unsecured, must get rid of it
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

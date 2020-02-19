@@ -1,4 +1,4 @@
-package com.skovdev.springlearn.controller.rest;
+package com.skovdev.springlearn.controller;
 
 import com.skovdev.springlearn.dto.UserDto;
 import com.skovdev.springlearn.service.UserService;
