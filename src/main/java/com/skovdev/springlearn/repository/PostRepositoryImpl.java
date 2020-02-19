@@ -8,9 +8,9 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -35,14 +35,14 @@ public class PostRepositoryImpl implements PostRepository {
     @Override
     public long createPost(Post post) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        ZonedDateTime zdt = post.getCreatedDate().atZone(ZoneId.of("Z"));
+        ZonedDateTime zdt = post.getCreatedDate().atZone(ZoneId.systemDefault());
         long createdAtMillis = zdt.toInstant().toEpochMilli();
 
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(CREATE_POST, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, post.getText());
             ps.setLong(2, post.getAuthorId());
-            ps.setDate(3, new Date(createdAtMillis));
+            ps.setTimestamp(3, new Timestamp(createdAtMillis));
             return ps;
         }, keyHolder);
 
