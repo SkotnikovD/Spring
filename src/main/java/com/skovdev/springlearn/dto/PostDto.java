@@ -5,7 +5,7 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 
 import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @Getter
 @Setter
@@ -16,6 +16,6 @@ public class PostDto {
     @NotNull
     private String text;
     private String userName;
-    private LocalDateTime createdDate;
+    private Instant createdDate;
 
 }

@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @Getter
 @Setter
@@ -13,7 +13,7 @@ public class Post {
 
     private Long id;
     private String text;
-    private LocalDateTime createdDate;
+    private Instant createdDate;
     private Long authorId;
 
 }

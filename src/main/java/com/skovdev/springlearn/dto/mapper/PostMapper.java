@@ -6,6 +6,8 @@ import com.skovdev.springlearn.model.User;
 import com.skovdev.springlearn.repository.UserRepository;
 import org.springframework.stereotype.Component;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 
 @Component
@@ -30,6 +32,7 @@ public class PostMapper {
     public static Post toModel(PostDto postDto, Long authorId) {
         return new Post()
                 .setText(postDto.getText())
-                .setAuthorId(authorId);
+                .setAuthorId(authorId)
+                .setCreatedDate(Instant.now().truncatedTo(ChronoUnit.SECONDS));
     }
 }

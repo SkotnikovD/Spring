@@ -10,7 +10,6 @@ import com.skovdev.springlearn.security.CurrentPrincipalInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -41,7 +40,7 @@ public class PostServiceImpl implements PostService {
     public long createPost(PostDto postDto) {
         String currentUserLogin = currentPrincipalInfoService.getCurrentUserLogin();
         Optional<User> user = userRepository.getUser(currentUserLogin);
-        return postRepository.createPost(PostMapper.toModel(postDto, user.get().getUserId()).setCreatedDate(LocalDateTime.now()));
+        return postRepository.createPost(PostMapper.toModel(postDto, user.get().getUserId()));
     }
 
 }

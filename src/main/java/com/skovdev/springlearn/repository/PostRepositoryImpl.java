@@ -11,8 +11,6 @@ import org.springframework.stereotype.Repository;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.Timestamp;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.List;
 
 @Repository
@@ -35,14 +33,12 @@ public class PostRepositoryImpl implements PostRepository {
     @Override
     public long createPost(Post post) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        ZonedDateTime zdt = post.getCreatedDate().atZone(ZoneId.systemDefault());
-        long createdAtMillis = zdt.toInstant().toEpochMilli();
 
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(CREATE_POST, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, post.getText());
             ps.setLong(2, post.getAuthorId());
-            ps.setTimestamp(3, new Timestamp(createdAtMillis));
+            ps.setTimestamp(3, new Timestamp(post.getCreatedDate().toEpochMilli()));
             return ps;
         }, keyHolder);
 
