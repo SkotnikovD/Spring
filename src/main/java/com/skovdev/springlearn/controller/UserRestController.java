@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/api/users")
 @Log     //TODO log everything properly
 public class UserRestController {
 
@@ -33,4 +33,9 @@ public class UserRestController {
         return userService.registerNewUser(userDto);
     }
 
-}
+    @GetMapping("/current")
+    public UserDto getCurrentUser() {
+        return userService.getCurrentUser();
+    }
+
+    }

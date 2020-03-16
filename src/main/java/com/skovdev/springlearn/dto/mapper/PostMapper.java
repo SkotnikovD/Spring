@@ -21,6 +21,7 @@ public class PostMapper {
 
     public PostDto toDto(Post post) {
         Optional<User> postAuthor = userRepository.getUser(post.getAuthorId());
+        //TODO inject author name via JOIN, not by calling getUser for every object
 
         return new PostDto()
                 .setId(post.getId())

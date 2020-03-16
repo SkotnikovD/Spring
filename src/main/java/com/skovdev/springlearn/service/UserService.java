@@ -9,4 +9,6 @@ public interface UserService {
     UserDto registerNewUser(UserDto userDto);
 
     Optional<UserDto> getUser(String login, boolean isExcludePass);
+
+    UserDto getCurrentUser();
 }

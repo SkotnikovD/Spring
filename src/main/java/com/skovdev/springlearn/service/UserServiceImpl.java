@@ -5,6 +5,7 @@ import com.skovdev.springlearn.model.Role;
 import com.skovdev.springlearn.model.User;
 import com.skovdev.springlearn.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -41,5 +42,12 @@ public class UserServiceImpl implements UserService {
         Optional<UserDto> userDto = toDto(userRepository.getUser(login));
         if (isExcludePass){userDto.ifPresent( user -> user.setPassword(null));}
         return userDto;
+    }
+
+    @Override
+    public UserDto getCurrentUser() {
+        String username = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(username==null) return null;
+        return this.getUser(username, true).orElse(null);
     }
 }

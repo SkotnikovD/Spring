@@ -21,6 +21,7 @@ public class User {
 
     private String password;
 
+    //TODO Validators on API input for NotNull and other logic
     private String firstName;
 
     private Date birthdayDate;

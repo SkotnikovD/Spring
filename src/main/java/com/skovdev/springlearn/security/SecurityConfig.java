@@ -12,6 +12,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -43,10 +46,11 @@ public class SecurityConfig {
             http
                 .csrf()
                     .disable()
-
+                .cors().and()
                 .antMatcher("/api/**")
                 .authorizeRequests()
-                    .antMatchers("/api/user/signup").permitAll()
+                    .antMatchers("/api/users/signup").permitAll()
+                    .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                     .antMatchers(HttpMethod.GET, "/api/posts").permitAll()
                 .anyRequest()
                     .authenticated()
@@ -60,6 +64,20 @@ public class SecurityConfig {
                     .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         }
 
+    }
+
+    @Bean
+    public CorsFilter corsFilter() {
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowCredentials(true);
+        config.addAllowedOrigin("http://localhost:4200");
+        config.addAllowedMethod("*");
+        config.addAllowedHeader("*");
+        config.addExposedHeader("Authorization");
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+        return new CorsFilter(source);
     }
 
     @Bean
