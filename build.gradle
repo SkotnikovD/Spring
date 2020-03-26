@@ -35,7 +35,6 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok:1.18.10'
 	implementation 'io.jsonwebtoken:jjwt:0.9.1'
 	implementation 'com.google.code.findbugs:jsr305:3.0.2' //Needs for using Spring @NotNull
-//	implementation 'com.h2database:h2'
 	implementation group: 'com.google.guava', name: 'guava', version: '28.2-jre'
 	implementation 'org.liquibase:liquibase-core'
 
