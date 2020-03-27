@@ -2,6 +2,7 @@ package com.skovdev.springlearn.security;
 
 import com.skovdev.springlearn.security.api.ApiJWTAuthenticationProcessingFilter;
 import com.skovdev.springlearn.security.api.ApiJWTSigninProcessingFilter;
+import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,6 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 
 @EnableWebSecurity
 @Configuration
+@Log
 public class SecurityConfig {
 
     @Configuration
@@ -68,9 +70,10 @@ public class SecurityConfig {
 
     @Bean
     public CorsFilter corsFilter() {
+
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.addAllowedOrigin("http://localhost:4200");
+        config.addAllowedOrigin("*"); //All origins allowed. At this point, this application doesn't need CORS policies, as it will just add additional difficulties on deployment process
         config.addAllowedMethod("*");
         config.addAllowedHeader("*");
         config.addExposedHeader("Authorization");
