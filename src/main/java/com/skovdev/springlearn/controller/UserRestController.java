@@ -1,6 +1,7 @@
 package com.skovdev.springlearn.controller;
 
 import com.skovdev.springlearn.dto.UserDto;
+import com.skovdev.springlearn.error.exceptions.NoSuchObjectException;
 import com.skovdev.springlearn.service.UserService;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,9 +12,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Optional;
+
 @RestController
 @RequestMapping("/api/users")
-@Log     //TODO log everything properly
+@Log
 public class UserRestController {
 
     @Autowired
@@ -21,14 +24,14 @@ public class UserRestController {
 
     @GetMapping()
     public UserDto getUser(@RequestParam("login") String login) {
-        //TODO must return 404 response for unexisted user
-        return userService.getUser(login, true).orElse(null);
-        //TODO Don't forget to integrate Exception Handler
+        if (login.equals("np"))
+            throw  new  NullPointerException("test Null Pointer");
+        Optional<UserDto> user = userService.getUser(login, true);
+        return user.orElseThrow(()-> new NoSuchObjectException("There is no user with login = " + login));
     }
 
     @PostMapping()
     @RequestMapping("/signup")
-    //TODO Setup Jackson to produce error if incoming object has unknown properties(fields)
     public UserDto createUser(@RequestBody UserDto userDto){
         return userService.registerNewUser(userDto);
     }
