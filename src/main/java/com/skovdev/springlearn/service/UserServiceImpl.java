@@ -31,7 +31,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto registerNewUser(UserDto userDto) {
-        //TODO check if the user is already exists
         User user = toModel(userDto);
         user.setRoles(Role.of(Role.ROLE_USER));
         user.setPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));

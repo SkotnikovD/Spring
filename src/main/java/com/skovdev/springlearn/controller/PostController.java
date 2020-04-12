@@ -22,7 +22,6 @@ public class PostController {
 
     @GetMapping()
     public List<PostDto> getPosts() {
-        //TODO Deal with pagination
         return postService.getPosts();
     }
 

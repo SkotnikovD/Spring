@@ -1,5 +1,6 @@
 package com.skovdev.springlearn.error.handler.model;
 
+import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -16,13 +17,13 @@ import java.util.stream.Collectors;
 @Data
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonFilter("ApiErrorStacktraceFilter")
 public class ApiError {
 
     private HttpStatus status;
 
     private String clientMessage;
 
-    //TODO exclude stacktrace on prod environment
     @JsonIgnore
     private Throwable exception;
 

@@ -24,6 +24,4 @@ public class UserDto {
 
     private Set<RoleDto> roles;
 
-    //TODO add ability for user to add avatar
-
 }
