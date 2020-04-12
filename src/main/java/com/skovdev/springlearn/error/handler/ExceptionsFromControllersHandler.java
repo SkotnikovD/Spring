@@ -1,6 +1,7 @@
 package com.skovdev.springlearn.error.handler;
 
 import com.skovdev.springlearn.error.exceptions.NoSuchObjectException;
+import com.skovdev.springlearn.error.exceptions.ObjectAlreadyExistsException;
 import com.skovdev.springlearn.error.handler.model.ApiError;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -16,15 +17,22 @@ import org.springframework.web.util.WebUtils;
 @ControllerAdvice
 public class ExceptionsFromControllersHandler extends ResponseEntityExceptionHandler {
 
+    @ExceptionHandler(ObjectAlreadyExistsException.class)
+    protected ResponseEntity<ApiError> handleObjectAlreadyExistsException(ObjectAlreadyExistsException ex) {
+        ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, ex.getMessage(), ex);
+        return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(NoSuchObjectException.class)
     protected ResponseEntity<ApiError> handleNoSuchObjectException(NoSuchObjectException ex) {
         ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, ex.getMessage(), ex);
         return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
     }
 
+
     @ExceptionHandler(Exception.class)
     protected ResponseEntity<ApiError> handleAllExceptions(Exception ex) {
-        logger.error(ex);
+        logger.error(ex.getMessage(), ex);
         ApiError apiError = new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, "Internal server error", ex);
         return new ResponseEntity<>(apiError, HttpStatus.INTERNAL_SERVER_ERROR);
     }

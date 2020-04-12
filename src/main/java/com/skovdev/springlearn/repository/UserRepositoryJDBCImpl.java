@@ -26,7 +26,6 @@ public class UserRepositoryJDBCImpl implements UserRepository {
                 user.getFirstName(), user.getBirthdayDate(), user.getLogin(), user.getPassword()
         );
         //TODO Fock! We forgot 'bout ROLE field!!!
-        //TODO correctly translate exception when user with such login already exists. Read about Spring automatic DB exception translation.
     }
 
     @Override
