@@ -4,13 +4,16 @@ import com.skovdev.springlearn.dto.UserDto;
 import com.skovdev.springlearn.error.exceptions.ObjectAlreadyExistsException;
 import com.skovdev.springlearn.model.Role;
 import com.skovdev.springlearn.model.User;
+import com.skovdev.springlearn.repository.FilesRepository;
 import com.skovdev.springlearn.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.net.URI;
 import java.util.Optional;
 
 import static com.skovdev.springlearn.dto.mapper.UserMapper.toDto;
@@ -22,11 +25,13 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     private BCryptPasswordEncoder bCryptPasswordEncoder;
+    private FilesRepository filesRepository;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
+    public UserServiceImpl(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder, FilesRepository filesRepository) {
         this.userRepository = userRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.filesRepository = filesRepository;
     }
 
     @Override
@@ -57,4 +62,11 @@ public class UserServiceImpl implements UserService {
         if (username == null) return null;
         return this.getUser(username, true).orElse(null);
     }
+
+    @Override
+    public URI addAvatar(MultipartFile avatar) {
+        return filesRepository.saveImageWithThumbnail(avatar).getThumbnailImage();
+    }
+
+
 }

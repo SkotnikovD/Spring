@@ -2,7 +2,7 @@ package com.skovdev.springlearn.security;
 
 import com.skovdev.springlearn.security.api.ApiJWTAuthenticationProcessingFilter;
 import com.skovdev.springlearn.security.api.ApiJWTSigninProcessingFilter;
-import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,7 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 
 @EnableWebSecurity
 @Configuration
-@Log
+@Slf4j
 public class SecurityConfig {
 
     @Configuration

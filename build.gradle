@@ -24,6 +24,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	testImplementation 'org.assertj:assertj-core:3.14.0'
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
@@ -35,10 +36,11 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok:1.18.10'
 	implementation 'io.jsonwebtoken:jjwt:0.9.1'
 	implementation 'com.google.code.findbugs:jsr305:3.0.2' //Needs for using Spring @NotNull
-	implementation group: 'com.google.guava', name: 'guava', version: '28.2-jre'
+	implementation 'com.google.guava:guava:28.2-jre'
 	implementation 'org.liquibase:liquibase-core'
+	implementation 'com.opentable.components:otj-pg-embedded:0.11.4' //embedded postgree for local testing
+	implementation group: 'net.coobird', name: 'thumbnailator', version: '0.4.11'  //for image resizing. Used for creating avatars thumbnails
 
-	implementation 'com.opentable.components:otj-pg-embedded:0.11.4'
 }
 
 test {

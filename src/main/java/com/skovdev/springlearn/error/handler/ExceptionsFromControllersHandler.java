@@ -2,6 +2,7 @@ package com.skovdev.springlearn.error.handler;
 
 import com.skovdev.springlearn.error.exceptions.NoSuchObjectException;
 import com.skovdev.springlearn.error.exceptions.ObjectAlreadyExistsException;
+import com.skovdev.springlearn.error.exceptions.RestApiException;
 import com.skovdev.springlearn.error.handler.model.ApiError;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,12 @@ import org.springframework.web.util.WebUtils;
 
 @ControllerAdvice
 public class ExceptionsFromControllersHandler extends ResponseEntityExceptionHandler {
+
+    @ExceptionHandler(RestApiException.class)
+    protected ResponseEntity<ApiError> handleRestApiException(RestApiException ex) {
+        ApiError apiError = new ApiError(ex.getResponseStatus(), ex.getMessage(), ex);
+        return new ResponseEntity<>(apiError, ex.getResponseStatus());
+    }
 
     @ExceptionHandler(ObjectAlreadyExistsException.class)
     protected ResponseEntity<ApiError> handleObjectAlreadyExistsException(ObjectAlreadyExistsException ex) {
