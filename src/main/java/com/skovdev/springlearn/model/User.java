@@ -26,6 +26,10 @@ public class User {
 
     private Date birthdayDate;
 
+    private String avatarFullsizeUrl;
+
+    private String avatarThumbnailUrl;
+
     @Setter (AccessLevel.NONE)
     @Nullable
     private Set<Role> roles;

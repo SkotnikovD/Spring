@@ -13,7 +13,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.net.URI;
 import java.util.Optional;
 
 import static com.skovdev.springlearn.dto.mapper.UserMapper.toDto;
@@ -57,15 +56,32 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserDto updateUser(UserDto user){
+        User userModel = toModel(user);
+        User updatedUser = userRepository.updateUser(userModel);
+        return toDto(updatedUser);
+    }
+
+    @Override
     public UserDto getCurrentUser() {
         String username = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (username == null) return null;
         return this.getUser(username, true).orElse(null);
     }
 
+
+    /**
+     * Add avatar to current user
+     * @param avatar - user avatar
+     * @return url to avatar's thumbnail
+     */
     @Override
-    public URI addAvatar(MultipartFile avatar) {
-        return filesRepository.saveImageWithThumbnail(avatar).getThumbnailImage();
+    public String addAvatar(MultipartFile avatar) {
+        FilesRepository.SaveImageResponse saveImageResponse = filesRepository.saveImageWithThumbnail(avatar);
+        UserDto currentUser = getCurrentUser();
+        currentUser.setAvatarFullsizeUrl(saveImageResponse.getFullsizeImage().toString());
+        currentUser.setAvatarThumbnailUrl(saveImageResponse.getThumbnailImage().toString());
+        return updateUser(currentUser).getAvatarThumbnailUrl();
     }
 
 

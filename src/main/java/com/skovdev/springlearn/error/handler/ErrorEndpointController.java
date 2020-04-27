@@ -46,8 +46,14 @@ public class ErrorEndpointController implements ErrorController {
             case NOT_FOUND:
                 clientMsg = "Requested address not found";
                 break;
-            default:
+            case BAD_REQUEST:
+                clientMsg = "Invalid request. Try again with another parameters";
+                break;
+            case INTERNAL_SERVER_ERROR:
                 clientMsg = "Internal server error occurred. We know about the problem and already fixing it";
+                break;
+            default:
+                clientMsg = "Error. Request can't be processed";
         }
         ApiError apiError = new ApiError(status, clientMsg, exception);
         return new ResponseEntity<>(apiError, status);

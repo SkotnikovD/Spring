@@ -14,8 +14,11 @@ public class UserMapper {
                 .setBirthdayDate(user.getBirthdayDate())
                 .setName(user.getFirstName())
                 .setLogin(user.getLogin())
+                //FIXME remove password from DTO!
                 .setPassword(user.getPassword())
-                .setRoles(user.getRoles() != null ? user.getRoles().stream().map(RoleMapper::toDto).collect(Collectors.toSet()) : null);
+                .setRoles(user.getRoles() != null ? user.getRoles().stream().map(RoleMapper::toDto).collect(Collectors.toSet()) : null)
+                .setAvatarFullsizeUrl(user.getAvatarFullsizeUrl())
+                .setAvatarThumbnailUrl(user.getAvatarThumbnailUrl());
     }
 
     public static Optional<UserDto> toDto(Optional<User> user) {
@@ -27,8 +30,9 @@ public class UserMapper {
                 .setFirstName(userDto.getName())
                 .setBirthdayDate(userDto.getBirthdayDate())
                 .setLogin(userDto.getLogin())
-                .setPassword(userDto.getPassword());
         //.setRoles(userDto.getRoles().stream().map(RoleMapper::toModel).collect(Collectors.toSet())); //Security layer is responsible for role assigning.
+                .setAvatarFullsizeUrl(userDto.getAvatarFullsizeUrl())
+                .setAvatarThumbnailUrl(userDto.getAvatarThumbnailUrl());
     }
 
     public static User toModel(UserDto userDto, String password) {

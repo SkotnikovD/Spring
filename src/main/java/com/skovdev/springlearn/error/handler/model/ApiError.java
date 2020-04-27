@@ -10,6 +10,7 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,20 +23,28 @@ public class ApiError {
 
     private HttpStatus status;
 
+    @Nullable
     private String clientMessage;
 
     @JsonIgnore
     private Throwable exception;
 
+    @Nullable
     private String debugMessage;
 
+    @Nullable
     private List<FieldValidationError> fieldValidationErrors;
 
-    public ApiError(HttpStatus status, String clientMessage, @Nullable Throwable exception) {
+    public ApiError(@Nonnull HttpStatus status, @Nullable String clientMessage, @Nullable Throwable exception) {
         this.status = status;
         this.clientMessage = clientMessage;
         this.exception = exception;
         if (exception != null) this.debugMessage = exception.getMessage();
+    }
+
+    public ApiError(@Nonnull HttpStatus status, @Nullable String clientMessage, @Nullable String debugMessage, @Nullable Throwable exception) {
+        this(status, clientMessage, exception);
+        if (debugMessage != null) this.debugMessage = debugMessage;
     }
 
     public void addFieldValidationErrors(List<FieldError> fieldErrors) {

@@ -13,4 +13,6 @@ public interface UserRepository {
     Optional<User> getUser(String login);
 
     Optional<User> getUser(long id);
+
+    User updateUser(User userModel);
 }

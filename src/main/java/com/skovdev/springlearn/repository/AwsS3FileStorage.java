@@ -21,6 +21,7 @@ import javax.validation.constraints.NotNull;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Base64;
@@ -79,8 +80,8 @@ public class AwsS3FileStorage implements FilesRepository {
         responseThumbnailSave.block();
 
         return new SaveImageResponse(
-                URI.create("https://" + avatarsBucketName + "." + s3url + "/" + newFilenameWithExtension),
-                URI.create("https://" + avatarsThumbnailBucketName + "." + s3url + "/" + newFilenameWithExtension)
+                URI.create(createFileUrl(avatarsBucketName, s3url, newFilenameWithExtension)),
+                URI.create(createFileUrl(avatarsThumbnailBucketName, s3url, newFilenameWithExtension))
         );
 
     }
@@ -129,19 +130,23 @@ public class AwsS3FileStorage implements FilesRepository {
 
         Mac hmac = Mac.getInstance("HmacSHA1");
 
-        hmac.init(new SecretKeySpec(awsS3SecretAccessKey.getBytes("UTF-8"), "HmacSHA1"));
+        hmac.init(new SecretKeySpec(awsS3SecretAccessKey.getBytes(StandardCharsets.UTF_8), "HmacSHA1"));
         String signature = Base64.getEncoder().encodeToString(
-                hmac.doFinal(stringToSign.getBytes("UTF-8")))
+                hmac.doFinal(stringToSign.getBytes(StandardCharsets.UTF_8)))
                 .replaceAll("\n", "");
 
         String authorizationString = "AWS " + awsS3AccessKey + ":" + signature;
 
-        WebClient.RequestBodySpec prebuiltRequest = webClient.put().uri("https://" + bucketName + "." + s3BaseUrl + "/" + fileNameWithExtension)
+        WebClient.RequestBodySpec prebuiltRequest = webClient.put().uri(createFileUrl(bucketName, s3BaseUrl, fileNameWithExtension))
                 .contentType(MediaType.parseMediaType(contentType))
                 .header("x-amz-acl", xAmzAcl)
                 .header("Date", date)
                 .header("Authorization", authorizationString);
         return prebuiltRequest;
+    }
+
+    private String createFileUrl(String bucketName, String s3BaseUrl, String fileNameWithExtension) {
+        return "https://" + bucketName + "." + s3BaseUrl + "/" + fileNameWithExtension;
     }
 
 }

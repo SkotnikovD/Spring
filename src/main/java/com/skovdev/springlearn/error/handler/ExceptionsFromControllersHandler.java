@@ -20,7 +20,8 @@ public class ExceptionsFromControllersHandler extends ResponseEntityExceptionHan
 
     @ExceptionHandler(RestApiException.class)
     protected ResponseEntity<ApiError> handleRestApiException(RestApiException ex) {
-        ApiError apiError = new ApiError(ex.getResponseStatus(), ex.getMessage(), ex);
+        logger.error(ex.getMessage(), ex);
+        ApiError apiError = new ApiError(ex.getResponseStatus(), ex.getClientMessage(), ex.getMessage(), ex);
         return new ResponseEntity<>(apiError, ex.getResponseStatus());
     }
 

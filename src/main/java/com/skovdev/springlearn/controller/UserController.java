@@ -10,13 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.net.URI;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -33,8 +33,6 @@ public class UserController {
 
     @GetMapping()
     public UserDto getUser(@RequestParam("login") String login) {
-        if (login.equals("np"))
-            throw new NullPointerException("test Null Pointer");
         Optional<UserDto> user = userService.getUser(login, true);
         return user.orElseThrow(() -> new NoSuchObjectException("There is no user with login = " + login));
     }
@@ -50,21 +48,29 @@ public class UserController {
         return userService.getCurrentUser();
     }
 
+    /**
+     *
+     * @param image desired avatar image. Maximum image size is specified by spring.servlet.multipart.max-file-size property.
+     * @return avatar thumbnail url
+     */
     @PostMapping("/current/avatar")
-    public URI addAvatar(@RequestParam("image") MultipartFile image) {
+    public String addAvatar(@RequestParam("image") MultipartFile image) {
         String contentType = image.getContentType();
         if (contentType == null) {
             String supportedTypes = VALID_AVATAR_TYPES.stream().map(Object::toString).collect(Collectors.joining(","));
-            throw new RestApiException("Bad request: no content-type image property was found. This endpoint accepts only following types: " + supportedTypes, HttpStatus.BAD_REQUEST);
-        }
-        if (image.getSize() > MAXIMUM_AVATAR_SIZE) {
-            throw new RestApiException("Avatar size must be less than " + MAXIMUM_AVATAR_SIZE / 1000000 + "Mb", HttpStatus.BAD_REQUEST);
+            throw new RestApiException(HttpStatus.BAD_REQUEST, "Bad request: no content-type image property was found. This endpoint accepts only following types: " + supportedTypes, null);
         }
         if (!VALID_AVATAR_TYPES.contains(contentType)) {
             String supportedTypes = VALID_AVATAR_TYPES.stream().map(Object::toString).collect(Collectors.joining(","));
-            throw new RestApiException("Unsupported image type. Found: " + contentType + " supported: " + supportedTypes, HttpStatus.UNSUPPORTED_MEDIA_TYPE);
+            throw new RestApiException(HttpStatus.UNSUPPORTED_MEDIA_TYPE, "Unsupported image type. Found: " + contentType + " supported: " + supportedTypes, null);
         }
         return userService.addAvatar(image);
+    }
+
+    @PutMapping("/current")
+    public UserDto updateCurrentUser(@RequestBody UserDto userDto) {
+        userDto.setLogin(userService.getCurrentUser().getLogin());
+        return userService.updateUser(userDto);
     }
 }
 

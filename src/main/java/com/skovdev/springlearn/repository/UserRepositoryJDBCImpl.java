@@ -41,7 +41,21 @@ public class UserRepositoryJDBCImpl implements UserRepository {
         return !user.isEmpty() ? Optional.of(user.get(0)) : Optional.empty();
     }
 
-    private static String INSERT_USER = "insert into users (first_name, birthday_date, login, password) values (?, ?, ?, ?)";
-    private static String GET_USER_BY_LOGIN = "select * from users where login=?";
-    private static String GET_USER_BY_ID = "select * from users where user_id=?";
+    @Override
+    public User updateUser(User userModel) {
+        jdbcTemplate.update(UPDATE_USER_BY_LOGIN,
+                userModel.getLogin(),
+                userModel.getFirstName(),
+                userModel.getBirthdayDate(),
+                userModel.getAvatarFullsizeUrl(),
+                userModel.getAvatarThumbnailUrl(),
+                userModel.getLogin());
+        return getUser(userModel.getLogin()).get();
+    }
+
+    private static final String INSERT_USER = "insert into users (first_name, birthday_date, login, password) values (?, ?, ?, ?)";
+    private static final String GET_USER_BY_LOGIN = "select * from users where login=?";
+    private static final String GET_USER_BY_ID = "select * from users where user_id=?";
+    private static final String UPDATE_USER_BY_LOGIN = "update users set (login, first_name, birthday_date, avatar_fullsize_url, avatar_thumbnail_url) = (?,?,?,?,?) where login=?";
+
 }

@@ -25,6 +25,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        //TODO ask Repository for user
         Optional<UserDto> userDto = userService.getUser(email, false);
         if (userDto.isPresent()) {
             List<GrantedAuthority> authorities = RoleMapper.toGrantedAuthorities(userDto.get().getRoles());
