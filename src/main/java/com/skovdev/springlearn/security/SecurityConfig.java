@@ -34,14 +34,12 @@ public class SecurityConfig {
         @Autowired
         private CustomUserDetailsService customUserDetailsService;
 
-
         @Override
         protected void configure(AuthenticationManagerBuilder auth) throws Exception {
             auth
                     .userDetailsService(customUserDetailsService)
                     .passwordEncoder(passwordEncoder);
         }
-
 
         @Override
         protected void configure(HttpSecurity http) throws Exception {

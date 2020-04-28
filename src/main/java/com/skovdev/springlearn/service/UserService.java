@@ -1,15 +1,16 @@
 package com.skovdev.springlearn.service;
 
-import com.skovdev.springlearn.dto.UserDto;
+import com.skovdev.springlearn.dto.user.SignUpUserDto;
+import com.skovdev.springlearn.dto.user.UserDto;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
 
 public interface UserService {
 
-    UserDto registerNewUser(UserDto userDto);
+    UserDto registerNewUser(SignUpUserDto signUpUserDto);
 
-    Optional<UserDto> getUser(String login, boolean isExcludePass);
+    Optional<UserDto> getUser(String login);
 
     UserDto updateUser(UserDto user);
 

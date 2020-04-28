@@ -12,19 +12,20 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class RoleMapper {
-    public static RoleDto toDto(Role role){
+    public static RoleDto toDto(Role role) {
         return new RoleDto().setRole(role.getRole());
     }
 
-    public static Role toModel (RoleDto roleDto){
+    public static Role toModel(RoleDto roleDto) {
         return new Role(roleDto.getRole());
     }
 
-    public static List<GrantedAuthority> toGrantedAuthorities(@Nullable Set<RoleDto> userRoles) {
-        if(userRoles!=null) {
-            return userRoles.stream().map(userRole->new SimpleGrantedAuthority(userRole.getRole())).collect(Collectors.toList());
+    public static List<GrantedAuthority> toGrantedAuthorities(@Nullable Set<Role> userRoles) {
+        if (userRoles != null) {
+            return userRoles.stream().map(userRole -> new SimpleGrantedAuthority(userRole.getRole())).collect(Collectors.toList());
         } else {
             return new ArrayList<GrantedAuthority>();
         }
     }
+
 }

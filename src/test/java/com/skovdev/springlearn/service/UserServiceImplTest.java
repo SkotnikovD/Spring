@@ -2,7 +2,7 @@ package com.skovdev.springlearn.service;
 
 import com.google.common.collect.Sets;
 import com.skovdev.springlearn.dto.RoleDto;
-import com.skovdev.springlearn.dto.UserDto;
+import com.skovdev.springlearn.dto.user.UserDto;
 import com.skovdev.springlearn.model.Role;
 import com.skovdev.springlearn.model.User;
 import com.skovdev.springlearn.repository.UserRepository;

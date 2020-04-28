@@ -25,7 +25,7 @@ public class UserRepositoryJDBCImpl implements UserRepository {
         jdbcTemplate.update(INSERT_USER,
                 user.getFirstName(), user.getBirthdayDate(), user.getLogin(), user.getPassword()
         );
-        //TODO Fock! We forgot 'bout ROLE field!!!
+        //FIXME Fock! We forgot 'bout ROLE field!!!
     }
 
     @Override

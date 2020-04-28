@@ -2,7 +2,6 @@ package com.skovdev.springlearn.security.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.skovdev.springlearn.dto.CredentialsDto;
-import com.skovdev.springlearn.dto.mapper.RoleMapper;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -19,7 +18,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -48,8 +46,7 @@ public class ApiJWTSigninProcessingFilter extends UsernamePasswordAuthentication
                     new UsernamePasswordAuthenticationToken(
                             credentialsDto.getLogin(),
                             credentialsDto.getPassword(),
-                            new ArrayList<>(RoleMapper.toGrantedAuthorities(credentialsDto.getRoles()))));
-            //TODO Seemed like setting roles, received from client is super unsecured, must get rid of it
+                            null));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

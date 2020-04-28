@@ -1,10 +1,9 @@
 package com.skovdev.springlearn.dto.mapper;
 
-import com.skovdev.springlearn.dto.UserDto;
+import com.skovdev.springlearn.dto.user.UserDto;
 import com.skovdev.springlearn.model.User;
 
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 // TODO try to use http://modelmapper.org/getting-started/ for such straight-line conversations
 
@@ -14,9 +13,6 @@ public class UserMapper {
                 .setBirthdayDate(user.getBirthdayDate())
                 .setName(user.getFirstName())
                 .setLogin(user.getLogin())
-                //FIXME remove password from DTO!
-                .setPassword(user.getPassword())
-                .setRoles(user.getRoles() != null ? user.getRoles().stream().map(RoleMapper::toDto).collect(Collectors.toSet()) : null)
                 .setAvatarFullsizeUrl(user.getAvatarFullsizeUrl())
                 .setAvatarThumbnailUrl(user.getAvatarThumbnailUrl());
     }

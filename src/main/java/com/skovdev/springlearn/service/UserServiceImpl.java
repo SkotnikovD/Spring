@@ -1,6 +1,7 @@
 package com.skovdev.springlearn.service;
 
-import com.skovdev.springlearn.dto.UserDto;
+import com.skovdev.springlearn.dto.user.SignUpUserDto;
+import com.skovdev.springlearn.dto.user.UserDto;
 import com.skovdev.springlearn.error.exceptions.ObjectAlreadyExistsException;
 import com.skovdev.springlearn.model.Role;
 import com.skovdev.springlearn.model.User;
@@ -33,26 +34,28 @@ public class UserServiceImpl implements UserService {
         this.filesRepository = filesRepository;
     }
 
+    /**
+     * Registers new user with {@link Role#ROLE_USER} role
+     * @param signUpUserDto - user to sign up
+     * @return created user
+     * @throws ObjectAlreadyExistsException if user with such login already exists
+     */
     @Override
-    public UserDto registerNewUser(UserDto userDto) {
-        User user = toModel(userDto);
+    public UserDto registerNewUser(SignUpUserDto signUpUserDto) {
+        User user = toModel(signUpUserDto);
         user.setRoles(Role.of(Role.ROLE_USER));
-        user.setPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
+        user.setPassword(bCryptPasswordEncoder.encode(signUpUserDto.getPassword()));
         try {
             userRepository.createUser(user);
         } catch (DuplicateKeyException e) {
             throw new ObjectAlreadyExistsException("User with login " + user.getLogin() + " already exists", e);
         }
-        return getUser(user.getLogin(), true).get();
+        return getUser(user.getLogin()).get();
     }
 
     @Override
-    public Optional<UserDto> getUser(String login, boolean isExcludePass) {
-        Optional<UserDto> userDto = toDto(userRepository.getUser(login));
-        if (isExcludePass) {
-            userDto.ifPresent(user -> user.setPassword(null));
-        }
-        return userDto;
+    public Optional<UserDto> getUser(String login) {
+        return toDto(userRepository.getUser(login));
     }
 
     @Override
@@ -66,7 +69,7 @@ public class UserServiceImpl implements UserService {
     public UserDto getCurrentUser() {
         String username = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (username == null) return null;
-        return this.getUser(username, true).orElse(null);
+        return this.getUser(username).orElse(null);
     }
 
 

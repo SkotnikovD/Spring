@@ -1,8 +1,8 @@
 package com.skovdev.springlearn.security;
 
-import com.skovdev.springlearn.dto.UserDto;
 import com.skovdev.springlearn.dto.mapper.RoleMapper;
-import com.skovdev.springlearn.service.UserService;
+import com.skovdev.springlearn.model.User;
+import com.skovdev.springlearn.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,26 +16,25 @@ import java.util.Optional;
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
-    private UserService userService;
+    private final UserRepository userRepository;
 
     @Autowired
-    public CustomUserDetailsService(UserService userService) {
-        this.userService = userService;
+    public CustomUserDetailsService(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        //TODO ask Repository for user
-        Optional<UserDto> userDto = userService.getUser(email, false);
-        if (userDto.isPresent()) {
-            List<GrantedAuthority> authorities = RoleMapper.toGrantedAuthorities(userDto.get().getRoles());
-            return buildUserForAuthentication(userDto.get(), authorities);
+        Optional<User> user = userRepository.getUser(email);
+        if (user.isPresent()) {
+            List<GrantedAuthority> authorities = RoleMapper.toGrantedAuthorities(user.get().getRoles());
+            return buildUserForAuthentication(user.get(), authorities);
         } else {
             throw new UsernameNotFoundException("User with email " + email + " does not exist.");
         }
     }
 
-    private UserDetails buildUserForAuthentication(UserDto user, List<GrantedAuthority> authorities) {
+    private UserDetails buildUserForAuthentication(User user, List<GrantedAuthority> authorities) {
         return new org.springframework.security.core.userdetails.User(user.getLogin(), user.getPassword(), authorities);
     }
 }

@@ -1,11 +1,10 @@
-package com.skovdev.springlearn.dto;
+package com.skovdev.springlearn.dto.user;
 
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
 import java.util.Date;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -14,15 +13,13 @@ public class UserDto {
 
     private String login;
 
-    private String password;
-
     private String name;
 
     private Date birthdayDate;
 
-    private Set<RoleDto> roles;
-
-    private String avatarFullsizeUrl;
+    private String avatarUrl;
 
     private String avatarThumbnailUrl;
+
+    private String avatarFullsizeUrl;
 }
