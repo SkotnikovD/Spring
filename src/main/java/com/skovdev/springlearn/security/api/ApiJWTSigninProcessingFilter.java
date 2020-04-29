@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 
 import static com.skovdev.springlearn.security.SecurityConstants.AUTH_HEADER_STRING;
 import static com.skovdev.springlearn.security.SecurityConstants.AUTH_SECRET;
-import static com.skovdev.springlearn.security.SecurityConstants.AUTH_TOCKEN_EXPIRATION_TIME;
+import static com.skovdev.springlearn.security.SecurityConstants.AUTH_TOCKEN_EXPIRATION_TIME_MS;
 import static com.skovdev.springlearn.security.SecurityConstants.AUTH_TOKEN_PREFIX;
 
 
@@ -65,7 +65,7 @@ public class ApiJWTSigninProcessingFilter extends UsernamePasswordAuthentication
             claims.put(ROLES_KEY, roles);
             String token = Jwts.builder()
                     .setClaims(claims)
-                    .setExpiration(new Date(System.currentTimeMillis() + AUTH_TOCKEN_EXPIRATION_TIME))
+                    .setExpiration(new Date(System.currentTimeMillis() + AUTH_TOCKEN_EXPIRATION_TIME_MS))
                     .signWith(SignatureAlgorithm.HS512, AUTH_SECRET)
                     .compact();
             res.addHeader(AUTH_HEADER_STRING, AUTH_TOKEN_PREFIX + token);
