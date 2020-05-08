@@ -55,7 +55,7 @@ public class UserController {
      * @return avatar thumbnail url
      */
     @PostMapping("/current/avatar")
-    public String addAvatar(@RequestParam("image") MultipartFile image) {
+    public void addAvatar(@RequestParam("image") MultipartFile image) {
         String contentType = image.getContentType();
         if (contentType == null) {
             String supportedTypes = VALID_AVATAR_TYPES.stream().map(Object::toString).collect(Collectors.joining(","));
@@ -65,7 +65,7 @@ public class UserController {
             String supportedTypes = VALID_AVATAR_TYPES.stream().map(Object::toString).collect(Collectors.joining(","));
             throw new RestApiException(HttpStatus.UNSUPPORTED_MEDIA_TYPE, "Unsupported image type. Found: " + contentType + " supported: " + supportedTypes, null);
         }
-        return userService.addAvatar(image);
+        userService.addAvatar(image);
     }
 
     @PutMapping("/current")

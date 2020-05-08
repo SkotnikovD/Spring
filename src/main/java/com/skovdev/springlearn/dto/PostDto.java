@@ -15,7 +15,7 @@ public class PostDto {
     private Long id;
     @NotNull
     private String text;
-    private String userName;
     private Instant createdDate;
+    private String avatarThumbnailUrl;
 
 }

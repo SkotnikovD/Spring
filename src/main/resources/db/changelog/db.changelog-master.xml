@@ -7,5 +7,6 @@
 	<include file="002_30-01-2020_02_insert_roles.sql" relativeToChangelogFile="true"/>
 	<include file="003_18-02-2020_01_create_posts.sql" relativeToChangelogFile="true"/>
 	<include file="004_23-04-2020_01_avatar_links.sql" relativeToChangelogFile="true"/>
+	<include file="005_05-05-2020_01_posts_created_at_indx.sql" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>

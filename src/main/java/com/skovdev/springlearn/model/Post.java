@@ -11,9 +11,8 @@ import java.time.Instant;
 @Accessors(chain = true)
 public class Post {
 
-    private Long id;
+    private Long postId;
     private String text;
     private Instant createdDate;
     private Long authorId;
-
 }

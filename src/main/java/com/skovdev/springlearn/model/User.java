@@ -15,7 +15,7 @@ import java.util.Set;
 @Accessors(chain = true)
 public class User {
 
-    private long userId;
+    private Long userId;
 
     private String login;
 

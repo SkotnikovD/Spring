@@ -2,7 +2,7 @@ package com.skovdev.springlearn.service;
 
 import com.skovdev.springlearn.dto.PostDto;
 import com.skovdev.springlearn.dto.mapper.PostMapper;
-import com.skovdev.springlearn.model.Post;
+import com.skovdev.springlearn.model.PostWithAuthor;
 import com.skovdev.springlearn.model.User;
 import com.skovdev.springlearn.repository.PostRepository;
 import com.skovdev.springlearn.repository.UserRepository;
@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class PostServiceImpl implements PostService {
@@ -31,9 +30,8 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<PostDto> getPosts() {
-        List<Post> posts = postRepository.getPosts();
-        return posts.stream().map(postMapper::toDto).collect(Collectors.toList());
+    public List<PostWithAuthor> getPosts() {
+        return postRepository.getPosts();
     }
 
     @Override

@@ -17,8 +17,6 @@ public class UserDto {
 
     private Date birthdayDate;
 
-    private String avatarUrl;
-
     private String avatarThumbnailUrl;
 
     private String avatarFullsizeUrl;
