@@ -58,9 +58,16 @@ public class PostRepositoryImpl implements PostRepository {
         return (int) keyHolder.getKeys().get("POST_ID");
     }
 
+    @Override
+    public boolean deletePost(long id) {
+        int result = jdbcTemplate.update(DELETE_POST, id);
+        return result == 1;
+    }
+
     private static String GET_POSTS = "SELECT post_id, post_text as text, created_at as createdDate, user_id, first_name, birthday_date, avatar_fullsize_url, avatar_thumbnail_url " +
             "from posts join users " +
             "ON posts.fk_user_id = users.user_id " +
             "ORDER BY posts.created_at DESC";
     private static String CREATE_POST = "insert into posts (post_text, fk_user_id, created_at) values (?, ?, ?)";
+    private static String DELETE_POST = "delete from posts where post_id=?";
 }

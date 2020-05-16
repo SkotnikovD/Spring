@@ -40,4 +40,9 @@ public class PostServiceImpl implements PostService {
         return postRepository.createPost(PostMapper.toModel(postDto, user.get().getUserId()));
     }
 
+    @Override
+    public boolean deletePost(long id) {
+        return postRepository.deletePost(id);
+    }
+
 }

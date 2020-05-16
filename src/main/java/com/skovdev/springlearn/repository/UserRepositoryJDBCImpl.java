@@ -1,10 +1,12 @@
 package com.skovdev.springlearn.repository;
 
+import com.skovdev.springlearn.error.exceptions.ObjectAlreadyExistsException;
 import com.skovdev.springlearn.model.User;
 import lombok.extern.slf4j.Slf4j;
 import org.simpleflatmapper.jdbc.spring.JdbcTemplateMapperFactory;
 import org.simpleflatmapper.jdbc.spring.ResultSetExtractorImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -42,19 +44,23 @@ public class UserRepositoryJDBCImpl implements UserRepository {
     @Transactional
     public void createUser(User user) {
         KeyHolder userIdkeyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(
-                new PreparedStatementCreator() {
-                    public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
-                        PreparedStatement ps =
-                                connection.prepareStatement(INSERT_USER, new String[]{"user_id"});
-                        ps.setString(1, user.getFirstName());
-                        ps.setDate(2, Date.valueOf(user.getBirthdayDate()));
-                        ps.setString(3, user.getLogin());
-                        ps.setString(4, user.getPassword());
-                        return ps;
-                    }
-                },
-                userIdkeyHolder);
+        try {
+            jdbcTemplate.update(
+                    new PreparedStatementCreator() {
+                        public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
+                            PreparedStatement ps =
+                                    connection.prepareStatement(INSERT_USER, new String[]{"user_id"});
+                            ps.setString(1, user.getFirstName());
+                            ps.setDate(2, user.getBirthdayDate() != null ? Date.valueOf(user.getBirthdayDate()) : null);
+                            ps.setString(3, user.getLogin());
+                            ps.setString(4, user.getPassword());
+                            return ps;
+                        }
+                    },
+                    userIdkeyHolder);
+        } catch (DuplicateKeyException e) {
+            throw new ObjectAlreadyExistsException("User with login " + user.getLogin() + " already exists", e);
+        }
 
         if (isEmpty(user.getRoles())) {
             log.warn("Created user with login = " + user.getLogin() + " doesn't have any roles");
@@ -88,7 +94,7 @@ public class UserRepositoryJDBCImpl implements UserRepository {
 
         List<User> results = jdbcTemplate.query(GET_USER_WITH_ROLES_BY_LOGIN, resultSetExtractor, login);
 
-        return results!=null && !results.isEmpty() ? Optional.of(results.get(0)) : Optional.empty();
+        return results != null && !results.isEmpty() ? Optional.of(results.get(0)) : Optional.empty();
     }
 
     @Override

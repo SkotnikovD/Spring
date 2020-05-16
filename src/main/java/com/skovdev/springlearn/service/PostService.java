@@ -10,4 +10,6 @@ public interface PostService {
     List<PostWithAuthor> getPosts();
 
     long createPost(PostDto postDto);
+
+    boolean deletePost(long id);
 }

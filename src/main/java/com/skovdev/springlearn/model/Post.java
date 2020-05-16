@@ -15,4 +15,5 @@ public class Post {
     private String text;
     private Instant createdDate;
     private Long authorId;
+
 }

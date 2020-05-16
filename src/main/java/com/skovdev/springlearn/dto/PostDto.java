@@ -16,6 +16,5 @@ public class PostDto {
     @NotNull
     private String text;
     private Instant createdDate;
-    private String avatarThumbnailUrl;
 
 }

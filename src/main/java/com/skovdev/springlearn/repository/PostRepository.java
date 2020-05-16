@@ -9,4 +9,6 @@ public interface PostRepository {
     List<PostWithAuthor> getPosts();
 
     long createPost(Post post);
+
+    boolean deletePost(long id);
 }

@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -25,6 +26,7 @@ public class User {
     //TODO Validators on API input for NotNull and other logic
     private String firstName;
 
+    @Nullable
     private LocalDate birthdayDate;
 
     private String avatarFullsizeUrl;
