@@ -40,6 +40,8 @@ dependencies {
 	implementation 'org.liquibase:liquibase-core'
 	implementation 'com.opentable.components:otj-pg-embedded:0.11.4' //embedded postgree for local testing
 	implementation group: 'net.coobird', name: 'thumbnailator', version: '0.4.11'  //for image resizing. Used for creating avatars thumbnails
+	runtime "com.fasterxml.jackson.datatype:jackson-datatype-jsr310" //For right LocalDate format output
+	implementation 'org.simpleflatmapper:sfm-springjdbc:8.2.3' //For easy mapping one-to-many queries
 
 }
 

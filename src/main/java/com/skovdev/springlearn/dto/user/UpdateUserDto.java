@@ -9,13 +9,14 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @Accessors(chain = true)
-public class SignUpUserDto{
-
-    private String login;
+public class UpdateUserDto {
 
     private String name;
 
     private LocalDate birthdayDate;
 
-    private String password;
+    private String avatarThumbnailUrl;
+
+    private String avatarFullsizeUrl;
+
 }

@@ -1,8 +1,9 @@
 package com.skovdev.springlearn.controller;
 
 import com.google.common.collect.ImmutableSet;
+import com.skovdev.springlearn.dto.user.GetUserDto;
 import com.skovdev.springlearn.dto.user.SignUpUserDto;
-import com.skovdev.springlearn.dto.user.UserDto;
+import com.skovdev.springlearn.dto.user.UpdateUserDto;
 import com.skovdev.springlearn.error.exceptions.NoSuchObjectException;
 import com.skovdev.springlearn.error.exceptions.RestApiException;
 import com.skovdev.springlearn.service.UserService;
@@ -33,19 +34,19 @@ public class UserController {
     private UserService userService;
 
     @GetMapping()
-    public UserDto getUser(@RequestParam("login") String login) {
-        Optional<UserDto> user = userService.getUser(login);
+    public GetUserDto getUser(@RequestParam("login") String login) {
+        Optional<GetUserDto> user = userService.getUser(login);
         return user.orElseThrow(() -> new NoSuchObjectException("There is no user with login = " + login));
     }
 
     @PostMapping()
     @RequestMapping("/signup")
-    public UserDto createUser(@RequestBody SignUpUserDto signupUserDto) {
+    public GetUserDto createUser(@RequestBody SignUpUserDto signupUserDto) {
         return userService.registerNewUser(signupUserDto);
     }
 
     @GetMapping("/current")
-    public UserDto getCurrentUser() {
+    public GetUserDto getCurrentUser() {
         return userService.getCurrentUser();
     }
 
@@ -69,9 +70,8 @@ public class UserController {
     }
 
     @PutMapping("/current")
-    public UserDto updateCurrentUser(@RequestBody UserDto userDto) {
-        userDto.setLogin(userService.getCurrentUser().getLogin());
-        return userService.updateUser(userDto);
+    public GetUserDto updateCurrentUser(@RequestBody UpdateUserDto userDto) {
+        return userService.updateCurrentUser(userDto);
     }
 }
 

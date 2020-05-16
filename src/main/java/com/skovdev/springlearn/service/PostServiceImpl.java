@@ -6,7 +6,6 @@ import com.skovdev.springlearn.model.PostWithAuthor;
 import com.skovdev.springlearn.model.User;
 import com.skovdev.springlearn.repository.PostRepository;
 import com.skovdev.springlearn.repository.UserRepository;
-import com.skovdev.springlearn.security.CurrentPrincipalInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

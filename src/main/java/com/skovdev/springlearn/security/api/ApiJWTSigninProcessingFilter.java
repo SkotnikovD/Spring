@@ -9,7 +9,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
@@ -19,9 +18,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Set;
 
+import static com.skovdev.springlearn.dto.mapper.RoleMapper.toStringRoles;
 import static com.skovdev.springlearn.security.SecurityConstants.AUTH_HEADER_STRING;
 import static com.skovdev.springlearn.security.SecurityConstants.AUTH_SECRET;
 import static com.skovdev.springlearn.security.SecurityConstants.AUTH_TOCKEN_EXPIRATION_TIME_MS;
@@ -59,16 +58,21 @@ public class ApiJWTSigninProcessingFilter extends UsernamePasswordAuthentication
                                             Authentication auth) throws IOException, ServletException {
         if (auth.getPrincipal() != null) {
             org.springframework.security.core.userdetails.User user = (org.springframework.security.core.userdetails.User) auth.getPrincipal();
-            String login = user.getUsername();
-            Claims claims = Jwts.claims().setSubject(login);
-            List<String> roles = user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
-            claims.put(ROLES_KEY, roles);
-            String token = Jwts.builder()
-                    .setClaims(claims)
-                    .setExpiration(new Date(System.currentTimeMillis() + AUTH_TOCKEN_EXPIRATION_TIME_MS))
-                    .signWith(SignatureAlgorithm.HS512, AUTH_SECRET)
-                    .compact();
-            res.addHeader(AUTH_HEADER_STRING, AUTH_TOKEN_PREFIX + token);
+            String jwtToken = createJwtToken(user);
+            res.addHeader(AUTH_HEADER_STRING, AUTH_TOKEN_PREFIX + jwtToken);
         }
+    }
+
+    private String createJwtToken(org.springframework.security.core.userdetails.User forUser) {
+        String login = forUser.getUsername();
+        Claims claims = Jwts.claims().setSubject(login);
+        Set<String> roles = toStringRoles(forUser.getAuthorities());
+        claims.put(ROLES_KEY, roles);
+        String token = Jwts.builder()
+                .setClaims(claims)
+                .setExpiration(new Date(System.currentTimeMillis() + AUTH_TOCKEN_EXPIRATION_TIME_MS))
+                .signWith(SignatureAlgorithm.HS512, AUTH_SECRET)
+                .compact();
+        return token;
     }
 }

@@ -8,6 +8,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -23,6 +24,12 @@ public class ExceptionsFromControllersHandler extends ResponseEntityExceptionHan
         logger.error(ex.getMessage(), ex);
         ApiError apiError = new ApiError(ex.getResponseStatus(), ex.getClientMessage(), ex.getMessage(), ex);
         return new ResponseEntity<>(apiError, ex.getResponseStatus());
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    protected ResponseEntity<ApiError> handleRestApiException(AccessDeniedException ex) {
+        ApiError apiError = new ApiError(HttpStatus.FORBIDDEN, "You don't have access to this resource", ex.getMessage(), ex);
+        return new ResponseEntity<>(apiError, HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(ObjectAlreadyExistsException.class)

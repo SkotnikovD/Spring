@@ -1,7 +1,8 @@
 package com.skovdev.springlearn.service;
 
+import com.skovdev.springlearn.dto.user.GetUserDto;
 import com.skovdev.springlearn.dto.user.SignUpUserDto;
-import com.skovdev.springlearn.dto.user.UserDto;
+import com.skovdev.springlearn.dto.user.UpdateUserDto;
 import com.skovdev.springlearn.error.exceptions.ObjectAlreadyExistsException;
 import com.skovdev.springlearn.model.Role;
 import com.skovdev.springlearn.model.User;
@@ -22,10 +23,10 @@ import static com.skovdev.springlearn.dto.mapper.UserMapper.toModel;
 @Service
 public class UserServiceImpl implements UserService {
 
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
-    private FilesRepository filesRepository;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final FilesRepository filesRepository;
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder, FilesRepository filesRepository) {
@@ -36,14 +37,15 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Registers new user with {@link Role#ROLE_USER} role
+     *
      * @param signUpUserDto - user to sign up
      * @return created user
      * @throws ObjectAlreadyExistsException if user with such login already exists
      */
     @Override
-    public UserDto registerNewUser(SignUpUserDto signUpUserDto) {
+    public GetUserDto registerNewUser(SignUpUserDto signUpUserDto) {
         User user = toModel(signUpUserDto);
-        user.setRoles(Role.of(Role.ROLE_USER));
+        user.setRoles(Role.ROLE_USER);
         user.setPassword(bCryptPasswordEncoder.encode(signUpUserDto.getPassword()));
         try {
             userRepository.createUser(user);
@@ -54,37 +56,43 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<UserDto> getUser(String login) {
+    public Optional<GetUserDto> getUser(String login) {
         return toDto(userRepository.getUser(login));
     }
 
     @Override
-    public UserDto updateUser(UserDto user){
+    public GetUserDto updateCurrentUser(UpdateUserDto user) {
         User userModel = toModel(user);
+        userModel.setLogin(getCurrentUser().getLogin());
         User updatedUser = userRepository.updateUser(userModel);
         return toDto(updatedUser);
     }
 
     @Override
-    public UserDto getCurrentUser() {
-        String username = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    public GetUserDto getCurrentUser() {
+        String username = getCurrentUserUsername();
         if (username == null) return null;
         return this.getUser(username).orElse(null);
+    }
+
+    public String getCurrentUserUsername() {
+        return (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 
 
     /**
      * Add avatar to current user
+     *
      * @param avatar - user avatar
      * @return url to avatar's thumbnail
      */
     @Override
     public String addAvatar(MultipartFile avatar) {
         FilesRepository.SaveImageResponse saveImageResponse = filesRepository.saveImageWithThumbnail(avatar);
-        UserDto currentUser = getCurrentUser();
-        currentUser.setAvatarFullsizeUrl(saveImageResponse.getFullsizeImage().toString());
-        currentUser.setAvatarThumbnailUrl(saveImageResponse.getThumbnailImage().toString());
-        return updateUser(currentUser).getAvatarThumbnailUrl();
+        User user = userRepository.getUser(getCurrentUserUsername()).get();
+        user.setAvatarThumbnailUrl(saveImageResponse.getThumbnailImage().toString());
+        user.setAvatarFullsizeUrl(saveImageResponse.getFullsizeImage().toString());
+        return userRepository.updateUser(user).getAvatarThumbnailUrl();
     }
 
 

@@ -1,6 +1,8 @@
 package com.skovdev.springlearn.dto.mapper;
 
-import com.skovdev.springlearn.dto.user.UserDto;
+import com.skovdev.springlearn.dto.user.GetUserDto;
+import com.skovdev.springlearn.dto.user.SignUpUserDto;
+import com.skovdev.springlearn.dto.user.UpdateUserDto;
 import com.skovdev.springlearn.model.User;
 
 import java.util.Optional;
@@ -8,31 +10,34 @@ import java.util.Optional;
 // TODO try to use http://modelmapper.org/getting-started/ for such straight-line conversations
 
 public class UserMapper {
-    public static UserDto toDto(User user) {
-        return new UserDto()
-                .setBirthdayDate(user.getBirthdayDate())
+    public static GetUserDto toDto(User user) {
+        return new GetUserDto()
                 .setName(user.getFirstName())
                 .setLogin(user.getLogin())
+                .setBirthdayDate(user.getBirthdayDate())
                 .setAvatarFullsizeUrl(user.getAvatarFullsizeUrl())
-                .setAvatarThumbnailUrl(user.getAvatarThumbnailUrl());
+                .setAvatarThumbnailUrl(user.getAvatarThumbnailUrl())
+                .setRoles(user.getRoles());
     }
 
-    public static Optional<UserDto> toDto(Optional<User> user) {
+    public static Optional<GetUserDto> toDto(Optional<User> user) {
         return user.map(UserMapper::toDto);
     }
 
-    public static User toModel(UserDto userDto) {
+    public static User toModel(UpdateUserDto updateUserDto) {
         return new User()
-                .setFirstName(userDto.getName())
-                .setBirthdayDate(userDto.getBirthdayDate())
-                .setLogin(userDto.getLogin())
-        //.setRoles(userDto.getRoles().stream().map(RoleMapper::toModel).collect(Collectors.toSet())); //Security layer is responsible for role assigning.
-                .setAvatarFullsizeUrl(userDto.getAvatarFullsizeUrl())
-                .setAvatarThumbnailUrl(userDto.getAvatarThumbnailUrl());
+                .setFirstName(updateUserDto.getName())
+                .setBirthdayDate(updateUserDto.getBirthdayDate())
+                .setAvatarFullsizeUrl(updateUserDto.getAvatarFullsizeUrl())
+                .setAvatarThumbnailUrl(updateUserDto.getAvatarThumbnailUrl());
     }
 
-    public static User toModel(UserDto userDto, String password) {
-        return toModel(userDto).setPassword(password);
+    public static User toModel(SignUpUserDto signUpUserDto) {
+        return new User()
+                .setFirstName(signUpUserDto.getName())
+                .setLogin(signUpUserDto.getLogin())
+                .setBirthdayDate(signUpUserDto.getBirthdayDate())
+                .setPassword(signUpUserDto.getPassword());
     }
 
 

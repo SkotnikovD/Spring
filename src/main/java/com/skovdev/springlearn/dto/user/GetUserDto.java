@@ -1,23 +1,28 @@
 package com.skovdev.springlearn.dto.user;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-import java.util.Date;
+import java.time.LocalDate;
+import java.util.Set;
 
 @Getter
 @Setter
 @Accessors(chain = true)
-public class UserDto {
+public class GetUserDto {
 
     private String login;
 
     private String name;
 
-    private Date birthdayDate;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private LocalDate birthdayDate;
 
     private String avatarThumbnailUrl;
 
     private String avatarFullsizeUrl;
+
+    private Set<String> roles;
 }
