@@ -13,8 +13,6 @@ import java.util.Set;
 @Accessors(chain = true)
 public class GetUserDto {
 
-    private String login;
-
     private String name;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")

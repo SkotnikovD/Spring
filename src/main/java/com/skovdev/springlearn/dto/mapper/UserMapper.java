@@ -13,7 +13,6 @@ public class UserMapper {
     public static GetUserDto toDto(User user) {
         return new GetUserDto()
                 .setName(user.getFirstName())
-                .setLogin(user.getLogin())
                 .setBirthdayDate(user.getBirthdayDate())
                 .setAvatarFullsizeUrl(user.getAvatarFullsizeUrl())
                 .setAvatarThumbnailUrl(user.getAvatarThumbnailUrl())
@@ -24,12 +23,13 @@ public class UserMapper {
         return user.map(UserMapper::toDto);
     }
 
-    public static User toModel(UpdateUserDto updateUserDto) {
+    public static User toModel(UpdateUserDto updateUserDto, String login) {
         return new User()
                 .setFirstName(updateUserDto.getName())
                 .setBirthdayDate(updateUserDto.getBirthdayDate())
                 .setAvatarFullsizeUrl(updateUserDto.getAvatarFullsizeUrl())
-                .setAvatarThumbnailUrl(updateUserDto.getAvatarThumbnailUrl());
+                .setAvatarThumbnailUrl(updateUserDto.getAvatarThumbnailUrl())
+                .setLogin(login);
     }
 
     public static User toModel(SignUpUserDto signUpUserDto) {

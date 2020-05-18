@@ -44,7 +44,7 @@ class UserServiceImplTest {
 
     @Test
     void RegisterNewUser_CorrectUser_ReturnUserWithAllFieldsWithoutPassword() {
-        UserServiceImpl userService = new UserServiceImpl(userRepositoryMock, bCryptPasswordEncoderMock, filesRepository);
+        UserServiceImpl userService = new UserServiceImpl(userRepositoryMock, bCryptPasswordEncoderMock, filesRepository, currentPrincipalInfoService);
         SignUpUserDto newUserDto = new SignUpUserDto()
                 .setLogin("fu@bar.com")
                 .setPassword("qwerty")
@@ -70,7 +70,7 @@ class UserServiceImplTest {
     @Test
     void RegisterNewUser_CorrectUser_PasswordEncryptedAndPassedForSaving() {
         BCryptPasswordEncoder realBCryptPasswordEncoder = new BCryptPasswordEncoder();
-        UserServiceImpl userService = new UserServiceImpl(userRepositoryMock, realBCryptPasswordEncoder, filesRepository);
+        UserServiceImpl userService = new UserServiceImpl(userRepositoryMock, realBCryptPasswordEncoder, filesRepository, currentPrincipalInfoService);
         SignUpUserDto newUserDto = new SignUpUserDto()
                 .setLogin("fu@bar.com")
                 .setPassword("qwerty")

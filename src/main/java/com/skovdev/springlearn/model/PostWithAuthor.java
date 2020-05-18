@@ -1,6 +1,5 @@
 package com.skovdev.springlearn.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -14,8 +13,6 @@ public class PostWithAuthor {
 
     private Long postId;
     private String text;
-
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "UTC")
     private Date createdDate;
     private User author;
 }

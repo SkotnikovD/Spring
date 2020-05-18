@@ -1,15 +1,15 @@
 package com.skovdev.springlearn.service;
 
-import com.skovdev.springlearn.dto.PostDto;
-import com.skovdev.springlearn.model.PostWithAuthor;
+import com.skovdev.springlearn.dto.CreatePostDto;
+import com.skovdev.springlearn.dto.PostWithAuthorDto;
 
-import java.util.List;
+import java.util.Collection;
 
 public interface PostService {
 
-    List<PostWithAuthor> getPosts();
+    Collection<PostWithAuthorDto> getPosts();
 
-    long createPost(PostDto postDto);
+    long createPost(CreatePostDto createPostDto);
 
     boolean deletePost(long id);
 }

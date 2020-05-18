@@ -27,12 +27,14 @@ public class UserServiceImpl implements UserService {
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final FilesRepository filesRepository;
+    private final CurrentPrincipalInfoService currentPrincipalInfoService;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder, FilesRepository filesRepository) {
+    public UserServiceImpl(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder, FilesRepository filesRepository, CurrentPrincipalInfoService currentPrincipalInfoService) {
         this.userRepository = userRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.filesRepository = filesRepository;
+        this.currentPrincipalInfoService = currentPrincipalInfoService;
     }
 
     /**
@@ -62,8 +64,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public GetUserDto updateCurrentUser(UpdateUserDto user) {
-        User userModel = toModel(user);
-        userModel.setLogin(getCurrentUser().getLogin());
+        User userModel = toModel(user, currentPrincipalInfoService.getCurrentUserLogin());
         User updatedUser = userRepository.updateUser(userModel);
         return toDto(updatedUser);
     }
