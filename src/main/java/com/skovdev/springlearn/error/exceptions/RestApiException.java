@@ -19,7 +19,8 @@ public class RestApiException extends RuntimeException{
      * @param clientMessage error message that should be displayed to end user
      */
     public RestApiException(@Nonnull HttpStatus responseStatus, @Nullable String debugMessage, @Nullable String clientMessage) {
-        this(responseStatus, debugMessage!=null ? debugMessage : clientMessage);
+        super(debugMessage);
+        this.responseStatus = responseStatus;
         this.clientMessage = clientMessage;
     }
 
@@ -28,8 +29,7 @@ public class RestApiException extends RuntimeException{
      * @param clientMessage error message that should be displayed to end user
      */
     public RestApiException(@Nonnull HttpStatus responseStatus, @Nullable String clientMessage) {
-        super(clientMessage);
-        this.responseStatus = responseStatus;
+        this(responseStatus, null, clientMessage);
     }
 
     public HttpStatus getResponseStatus() {

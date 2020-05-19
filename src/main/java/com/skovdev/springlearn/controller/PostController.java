@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.Collection;
 
 @RestController
@@ -30,7 +31,7 @@ public class PostController {
     }
 
     @PostMapping()
-    public long createPost(@RequestBody CreatePostDto createPostDto) {
+    public long createPost(@RequestBody @Valid CreatePostDto createPostDto) {
         return postService.createPost(createPostDto);
     }
 

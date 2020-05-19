@@ -16,9 +16,11 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -41,7 +43,9 @@ public class UserController {
 
     @PostMapping()
     @RequestMapping("/signup")
-    public GetUserDto createUser(@RequestBody SignUpUserDto signupUserDto) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public GetUserDto createUser(@RequestBody @Valid SignUpUserDto signupUserDto) {
+        if (signupUserDto.getName().equals("throw")) throw new RestApiException(HttpStatus.EXPECTATION_FAILED, "В следующий раз повезет");
         return userService.registerNewUser(signupUserDto);
     }
 
@@ -70,7 +74,7 @@ public class UserController {
     }
 
     @PutMapping("/current")
-    public GetUserDto updateCurrentUser(@RequestBody UpdateUserDto userDto) {
+    public GetUserDto updateCurrentUser(@RequestBody @Valid UpdateUserDto userDto) {
         return userService.updateCurrentUser(userDto);
     }
 }

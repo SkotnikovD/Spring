@@ -52,6 +52,9 @@ public class ErrorEndpointController implements ErrorController {
             case INTERNAL_SERVER_ERROR:
                 clientMsg = "Internal server error occurred. We know about the problem and already fixing it";
                 break;
+            case UNAUTHORIZED:
+                clientMsg = "You don't have permissions for this action";
+                break;
             default:
                 clientMsg = "Error. Request can't be processed";
         }
