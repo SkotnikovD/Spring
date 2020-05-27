@@ -1,7 +1,9 @@
-package com.skovdev.springlearn.repository;
+package com.skovdev.springlearn.repository.jdbc;
 
 import com.skovdev.springlearn.error.exceptions.ObjectAlreadyExistsException;
+import com.skovdev.springlearn.model.Role;
 import com.skovdev.springlearn.model.User;
+import com.skovdev.springlearn.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.simpleflatmapper.jdbc.spring.JdbcTemplateMapperFactory;
 import org.simpleflatmapper.jdbc.spring.ResultSetExtractorImpl;
@@ -22,6 +24,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.springframework.util.CollectionUtils.isEmpty;
 
@@ -68,7 +71,7 @@ public class UserRepositoryJDBCImpl implements UserRepository {
         }
 
         MapSqlParameterSource parameters = new MapSqlParameterSource();
-        parameters.addValue("roles", user.getRoles());
+        parameters.addValue("roles", user.getRoles().stream().map(Role::getRoleName).collect(Collectors.toSet()));
         List<Number> rolesId = namedParameterJdbcTemplate.query("SELECT user_role_id FROM user_roles WHERE role IN (:roles)",
                 parameters, (rs, rowNum) -> rs.getLong("user_role_id"));
 
@@ -89,6 +92,8 @@ public class UserRepositoryJDBCImpl implements UserRepository {
         final ResultSetExtractorImpl<User> resultSetExtractor =
                 JdbcTemplateMapperFactory
                         .newInstance()
+                        .addAlias("userRoleId", "roles_userRoleId")
+                        .addAlias("roleName", "roles_roleName")
                         .addKeys("userId")
                         .newResultSetExtractor(User.class);
 
@@ -109,7 +114,7 @@ public class UserRepositoryJDBCImpl implements UserRepository {
     }
 
     private static final String INSERT_USER = "insert into users (first_name, birthday_date, login, password) values (?, ?, ?, ?)";
-    private static final String GET_USER_WITH_ROLES_BY_LOGIN = "select user_id as userId, first_name, birthday_date, password, login, avatar_fullsize_url, avatar_thumbnail_url, role as roles from users as u " +
+    private static final String GET_USER_WITH_ROLES_BY_LOGIN = "select user_id as userId, first_name, birthday_date, password, login, avatar_fullsize_url, avatar_thumbnail_url, user_role_id as userRoleId, role as roleName from users as u " +
             "join users_to_user_roles as utor on u.user_id=utor.user_id_fk " +
             "join user_roles as ur on ur.user_role_id = utor.user_role_id_fk " +
             "where u.login=?";

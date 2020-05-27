@@ -3,9 +3,11 @@ package com.skovdev.springlearn.dto.mapper;
 import com.skovdev.springlearn.dto.user.GetUserDto;
 import com.skovdev.springlearn.dto.user.SignUpUserDto;
 import com.skovdev.springlearn.dto.user.UpdateUserDto;
+import com.skovdev.springlearn.model.Role;
 import com.skovdev.springlearn.model.User;
 
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 // TODO try to use http://modelmapper.org/getting-started/ for such straight-line conversations
 
@@ -16,7 +18,7 @@ public class UserMapper {
                 .setBirthdayDate(user.getBirthdayDate())
                 .setAvatarFullsizeUrl(user.getAvatarFullsizeUrl())
                 .setAvatarThumbnailUrl(user.getAvatarThumbnailUrl())
-                .setRoles(user.getRoles());
+                .setRoles(user.getRoles().stream().map(Role::getRoleName).collect(Collectors.toSet()));
     }
 
     public static Optional<GetUserDto> toDto(Optional<User> user) {

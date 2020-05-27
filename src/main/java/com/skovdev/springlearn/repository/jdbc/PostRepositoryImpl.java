@@ -1,8 +1,9 @@
-package com.skovdev.springlearn.repository;
+package com.skovdev.springlearn.repository.jdbc;
 
 import com.skovdev.springlearn.model.Post;
 import com.skovdev.springlearn.model.PostWithAuthor;
 import com.skovdev.springlearn.model.User;
+import com.skovdev.springlearn.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;

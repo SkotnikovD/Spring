@@ -1,5 +1,6 @@
 package com.skovdev.springlearn.dto.mapper;
 
+import com.skovdev.springlearn.model.Role;
 import org.springframework.lang.Nullable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -12,9 +13,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class RoleMapper {
-    public static List<GrantedAuthority> toGrantedAuthorities(@Nullable Set<String> userRoles) {
+    public static List<GrantedAuthority> toGrantedAuthorities(@Nullable Set<Role> userRoles) {
         if (userRoles != null) {
-            return userRoles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
+            return userRoles.stream().map(r->new SimpleGrantedAuthority(r.getRoleName())).collect(Collectors.toList());
         } else {
             return new ArrayList<GrantedAuthority>();
         }

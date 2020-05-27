@@ -33,18 +33,23 @@ public class User {
 
     private String avatarThumbnailUrl;
 
-    @Setter (AccessLevel.NONE)
-    private Set<String> roles = new HashSet<>();
+//    @Setter(AccessLevel.NONE)
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "users_to_user_roles",
+            joinColumns = @JoinColumn(name = "user_id_fk", referencedColumnName="user_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_role_id_fk", referencedColumnName="user_role_id"))
+    private Set<Role> roles = new HashSet<>();
+
+//    @NotNull
+//    public User setRoles(Role... role) {
+//        getRoles().addAll(Arrays.asList(role));
+//        return this;
+//    }
 
     @NotNull
-    public User setRoles (String ...role){
-        roles.addAll(Arrays.asList(role));
-        return this;
-    }
-
-    @NotNull
-    public User setRoles(String role){
-        roles.add(role);
+    public User addRole(Role role) {
+        getRoles().add(role);
         return this;
     }
 }
