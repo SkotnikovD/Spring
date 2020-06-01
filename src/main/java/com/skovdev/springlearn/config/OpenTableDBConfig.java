@@ -17,7 +17,10 @@ public class OpenTableDBConfig {
     DataSource configurate() throws IOException, SQLException {
         EmbeddedPostgres embeddedPostgres;
         embeddedPostgres = EmbeddedPostgres.builder()
-                .setPort(5433).start();
+                .setPort(5433)
+                .setServerConfig("logging_collector", "on")
+                .setServerConfig("log_statement", "all")
+                .start();
 
 //        try (Connection conn = embeddedPostgres.getPostgresDatabase().getConnection()) {
 //            Statement statement = conn.createStatement();
