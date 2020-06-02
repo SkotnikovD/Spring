@@ -9,5 +9,7 @@
 	<include file="004_23-04-2020_01_avatar_links.sql" relativeToChangelogFile="true"/>
 	<include file="005_05-05-2020_01_posts_created_at_indx.sql" relativeToChangelogFile="true"/>
 	<include file="006_27-05-2020_01_users_login_index.sql" relativeToChangelogFile="true"/>
+	<include file="007_29-05-2020_01_users_to_user_roles_pk_change.sql" relativeToChangelogFile="true"/>
+
 
 </databaseChangeLog>
