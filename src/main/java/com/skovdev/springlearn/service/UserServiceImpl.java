@@ -13,6 +13,7 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
@@ -45,15 +46,17 @@ public class UserServiceImpl implements UserService {
      * @throws ObjectAlreadyExistsException if user with such login already exists
      */
     @Override
+    @Transactional
     public GetUserDto registerNewUser(SignUpUserDto signUpUserDto) {
         User user = toModel(signUpUserDto);
-        user.setRoles(Role.ROLE_USER);
+        user.addRole(new Role().setRoleName(Role.ROLE_USER));
         user.setPassword(bCryptPasswordEncoder.encode(signUpUserDto.getPassword()));
         try {
             userRepository.createUser(user);
         } catch (DuplicateKeyException e) {
             throw new ObjectAlreadyExistsException("User with login " + user.getLogin() + " already exists", e);
         }
+
         return getUser(user.getLogin()).get();
     }
 
@@ -63,6 +66,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public GetUserDto updateCurrentUser(UpdateUserDto user) {
         User userModel = toModel(user, currentPrincipalInfoService.getCurrentUserLogin());
         User updatedUser = userRepository.updateUser(userModel);
@@ -88,12 +92,13 @@ public class UserServiceImpl implements UserService {
      * @return url to avatar's thumbnail
      */
     @Override
+    @Transactional
     public String addAvatar(MultipartFile avatar) {
         FilesRepository.SaveImageResponse saveImageResponse = filesRepository.saveImageWithThumbnail(avatar);
         User user = userRepository.getUser(getCurrentUserUsername()).get();
         user.setAvatarThumbnailUrl(saveImageResponse.getThumbnailImage().toString());
         user.setAvatarFullsizeUrl(saveImageResponse.getFullsizeImage().toString());
-        return userRepository.updateUser(user).getAvatarThumbnailUrl();
+        return saveImageResponse.getThumbnailImage().toString();
     }
 
 

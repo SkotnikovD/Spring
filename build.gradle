@@ -1,6 +1,6 @@
 plugins {
-	id 'org.springframework.boot' version '2.2.1.RELEASE'
-	id 'io.spring.dependency-management' version '1.0.8.RELEASE'
+	id 'org.springframework.boot' version '2.3.0.RELEASE'
+	id 'io.spring.dependency-management' version '1.0.9.RELEASE'
 	id 'java'
 }
 
@@ -20,11 +20,12 @@ repositories {
 }
 
 dependencies {
-//	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	testImplementation 'org.assertj:assertj-core:3.14.0'
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
@@ -42,7 +43,7 @@ dependencies {
 	implementation group: 'net.coobird', name: 'thumbnailator', version: '0.4.11'  //for image resizing. Used for creating avatars thumbnails
 	runtime "com.fasterxml.jackson.datatype:jackson-datatype-jsr310" //For right LocalDate format output
 	implementation 'org.simpleflatmapper:sfm-springjdbc:8.2.3' //For easy mapping one-to-many queries
-
+	implementation 'com.cosium.spring.data:spring-data-jpa-entity-graph:2.3.0'
 }
 
 test {

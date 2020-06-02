@@ -11,5 +11,5 @@ public interface PostService {
 
     long createPost(CreatePostDto createPostDto);
 
-    boolean deletePost(long id);
+    void deletePost(long id);
 }

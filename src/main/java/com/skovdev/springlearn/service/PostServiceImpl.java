@@ -3,16 +3,17 @@ package com.skovdev.springlearn.service;
 import com.skovdev.springlearn.dto.CreatePostDto;
 import com.skovdev.springlearn.dto.PostWithAuthorDto;
 import com.skovdev.springlearn.dto.mapper.PostMapper;
+import com.skovdev.springlearn.model.Post;
 import com.skovdev.springlearn.model.User;
 import com.skovdev.springlearn.repository.PostRepository;
 import com.skovdev.springlearn.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Collection;
-import java.util.Optional;
 
 @Service
 public class PostServiceImpl implements PostService {
@@ -34,16 +35,20 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    @Transactional
     public long createPost(CreatePostDto createPostDto) {
-        String currentUserLogin = currentPrincipalInfoService.getCurrentUserLogin();
         //TODO store user id in token, don't make db querying to get it
-        Optional<User> user = userRepository.getUser(currentUserLogin);
-        return postRepository.createPost(PostMapper.toModel(createPostDto, user.get().getUserId(), Instant.now().truncatedTo(ChronoUnit.SECONDS)));
+        //Then we could use .getOne(userId) to eliminate redundant db query for retrieving user
+        User currentUser = currentPrincipalInfoService.getCurrentUser();
+        Post post = PostMapper.toModel(createPostDto, Instant.now().truncatedTo(ChronoUnit.SECONDS));
+        post.setAuthor(currentUser);
+        return postRepository.createPost(post);
     }
 
     @Override
-    public boolean deletePost(long id) {
-        return postRepository.deletePost(id);
+    @Transactional
+    public void deletePost(long id) {
+        postRepository.deletePost(id);
     }
 
 }

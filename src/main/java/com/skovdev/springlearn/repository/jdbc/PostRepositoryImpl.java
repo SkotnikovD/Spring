@@ -1,16 +1,13 @@
 package com.skovdev.springlearn.repository.jdbc;
 
 import com.skovdev.springlearn.model.Post;
-import com.skovdev.springlearn.model.PostWithAuthor;
 import com.skovdev.springlearn.model.User;
-import com.skovdev.springlearn.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -19,8 +16,10 @@ import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.List;
 
-@Repository
-public class PostRepositoryImpl implements PostRepository {
+/**
+ * This class intentionally left just for demonstration of how data access level was implemented via jdbc
+ */
+public class PostRepositoryImpl {
 
 
     private JdbcTemplate jdbcTemplate;
@@ -30,7 +29,6 @@ public class PostRepositoryImpl implements PostRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    @Override
     public List<PostWithAuthor> getPosts() {
         List<PostWithAuthor> posts = jdbcTemplate.query(GET_POSTS, new RowMapper<PostWithAuthor>() {
             @Override
@@ -44,14 +42,13 @@ public class PostRepositoryImpl implements PostRepository {
         return posts;
     }
 
-    @Override
     public long createPost(Post post) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(CREATE_POST, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, post.getText());
-            ps.setLong(2, post.getAuthorId());
+            ps.setLong(2, post.getAuthor().getUserId());
             ps.setTimestamp(3, new Timestamp(post.getCreatedDate().toEpochMilli()));
             return ps;
         }, keyHolder);
@@ -59,7 +56,6 @@ public class PostRepositoryImpl implements PostRepository {
         return (int) keyHolder.getKeys().get("POST_ID");
     }
 
-    @Override
     public boolean deletePost(long id) {
         int result = jdbcTemplate.update(DELETE_POST, id);
         return result == 1;

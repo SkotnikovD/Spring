@@ -27,6 +27,7 @@ public class UserMapper {
 
     public static User toModel(UpdateUserDto updateUserDto, String login) {
         return new User()
+                .setUserId(updateUserDto.getId())
                 .setFirstName(updateUserDto.getName())
                 .setBirthdayDate(updateUserDto.getBirthdayDate())
                 .setAvatarFullsizeUrl(updateUserDto.getAvatarFullsizeUrl())
