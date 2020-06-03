@@ -3,6 +3,9 @@ package com.skovdev.springlearn.controller;
 import com.skovdev.springlearn.dto.CreatePostDto;
 import com.skovdev.springlearn.dto.PostWithAuthorDto;
 import com.skovdev.springlearn.service.PostService;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,11 +26,15 @@ public class PostController {
     @Autowired
     private PostService postService;
 
+    @ApiOperation(value = "Get all posts at ones")
     @GetMapping()
     public Collection<PostWithAuthorDto> getPosts() {
         return postService.getPosts();
     }
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Authorization", value = "Authorization bearer token", required = true, dataType = "string", paramType = "header"),
+    })
     @PostMapping()
     public long createPost(@RequestBody @Valid CreatePostDto createPostDto) {
         return postService.createPost(createPostDto);

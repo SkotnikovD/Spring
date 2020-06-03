@@ -21,9 +21,9 @@ import java.util.Set;
 public class Role {
 
     //WARNING! If you change roles names, don't forget to change their string values in @Secured annotations in controllers!
-    public static String ROLE_USER = "USER";
-    public static String ROLE_ADMIN = "ADMIN";
-    public static String ROLE_SUPER_ADMIN = "ROOT_ADMIN";
+    public static final String ROLE_USER = "USER";
+    public static final String ROLE_ADMIN = "ADMIN";
+    public static final String ROLE_SUPER_ADMIN = "ROOT_ADMIN";
     private static Set<String> possibleRoles = ImmutableSet.of(ROLE_USER, ROLE_ADMIN, ROLE_SUPER_ADMIN);
 
     @Id

@@ -6,7 +6,10 @@ import com.skovdev.springlearn.dto.user.SignUpUserDto;
 import com.skovdev.springlearn.dto.user.UpdateUserDto;
 import com.skovdev.springlearn.error.exceptions.NoSuchObjectException;
 import com.skovdev.springlearn.error.exceptions.RestApiException;
+import com.skovdev.springlearn.error.handler.model.ApiError;
 import com.skovdev.springlearn.service.UserService;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,20 +35,26 @@ public class UserController {
 
     public static final long MAXIMUM_AVATAR_SIZE = 10_000_000; //10Mb
     private static final Set<String> VALID_AVATAR_TYPES = ImmutableSet.of("image/jpeg", "image/png");
-    @Autowired
+
     private UserService userService;
 
+    @Autowired
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
+
+    @ApiResponses(value = {@ApiResponse(code = 404, message = "There is no user with login = 'input login'", response = ApiError.class)})
     @GetMapping()
     public GetUserDto getUser(@RequestParam("login") String login) {
         Optional<GetUserDto> user = userService.getUser(login);
         return user.orElseThrow(() -> new NoSuchObjectException("There is no user with login = " + login));
     }
 
-    @PostMapping()
-    @RequestMapping("/signup")
+    @PostMapping("/signup")
     @ResponseStatus(HttpStatus.CREATED)
     public GetUserDto createUser(@RequestBody @Valid SignUpUserDto signupUserDto) {
-        if (signupUserDto.getName().equals("throw")) throw new RestApiException(HttpStatus.EXPECTATION_FAILED, "В следующий раз повезет");
+        if (signupUserDto.getName().equals("throw"))
+            throw new RestApiException(HttpStatus.EXPECTATION_FAILED, "В следующий раз повезет");
         return userService.registerNewUser(signupUserDto);
     }
 
@@ -55,7 +64,6 @@ public class UserController {
     }
 
     /**
-     *
      * @param image desired avatar image. Maximum image size is specified by spring.servlet.multipart.max-file-size property.
      * @return avatar thumbnail url
      */

@@ -44,6 +44,9 @@ dependencies {
 	runtime "com.fasterxml.jackson.datatype:jackson-datatype-jsr310" //For right LocalDate format output
 	implementation 'org.simpleflatmapper:sfm-springjdbc:8.2.3' //For easy mapping one-to-many queries
 	implementation 'com.cosium.spring.data:spring-data-jpa-entity-graph:2.3.0'
+	implementation group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
+	implementation 'io.springfox:springfox-swagger-ui:2.9.2'
+	implementation 'io.springfox:springfox-bean-validators:2.9.2'
 }
 
 test {
