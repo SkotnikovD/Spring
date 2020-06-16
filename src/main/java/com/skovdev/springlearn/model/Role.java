@@ -3,6 +3,7 @@ package com.skovdev.springlearn.model;
 import com.google.common.collect.ImmutableSet;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.springframework.data.annotation.Immutable;
 
@@ -18,6 +19,7 @@ import java.util.Set;
 @Entity
 @Table(name="user_roles")
 @EqualsAndHashCode(exclude = {"userRoleId"})
+@NoArgsConstructor
 public class Role {
 
     //WARNING! If you change roles names, don't forget to change their string values in @Secured annotations in controllers!
@@ -28,7 +30,7 @@ public class Role {
 
     @Id
     @Column(name = "user_role_id", nullable = false)
-    private Long userRoleId;
+    private Integer userRoleId;
 
     @Column(name = "role", nullable = false, unique = true)
     private String roleName;

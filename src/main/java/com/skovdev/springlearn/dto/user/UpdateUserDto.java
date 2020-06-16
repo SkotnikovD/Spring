@@ -15,7 +15,7 @@ import java.time.LocalDate;
 public class UpdateUserDto {
 
     @NotNull
-    private long id;
+    private int id;
 
     @NotNull
     @Size(min=2, max=50)

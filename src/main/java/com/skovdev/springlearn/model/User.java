@@ -35,7 +35,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_id_generator")
     @SequenceGenerator(name = "user_id_generator", sequenceName = "users_user_id_seq", allocationSize = 1)
     @Column(name = "user_id", nullable = false)
-    private Long userId;
+    private Integer userId;
 
     @EqualsAndHashCode.Include
     @Column(name = "login", length = 250, nullable = false, unique = true)

@@ -28,7 +28,7 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "posts_id_generator")
     @SequenceGenerator(name = "posts_id_generator", sequenceName = "posts_post_id_seq", allocationSize = 1)
     @Column(name = "post_id", nullable = false)
-    private Long postId;
+    private Integer postId;
 
     @Column(name = "post_text", nullable = false)
     private String text;

@@ -6,6 +6,6 @@ import com.skovdev.springlearn.model.User;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface UserSpringDataRepository extends EntityGraphJpaRepository<User, Long> {
+public interface UserSpringDataRepository extends EntityGraphJpaRepository<User, Integer> {
     User findByLogin(String login, EntityGraph entityGraph);
 }

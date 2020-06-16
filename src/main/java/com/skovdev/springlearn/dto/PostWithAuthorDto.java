@@ -13,7 +13,7 @@ import java.util.Date;
 @Accessors(chain = true)
 public class PostWithAuthorDto {
 
-    private Long postId;
+    private Integer postId;
     private String text;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "UTC")
