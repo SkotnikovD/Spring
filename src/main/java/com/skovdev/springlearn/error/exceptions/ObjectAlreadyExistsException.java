@@ -5,7 +5,7 @@ package com.skovdev.springlearn.error.exceptions;
  * Example: client's trying to create user with login that already in use
  */
 public class ObjectAlreadyExistsException extends RuntimeException{
-    public ObjectAlreadyExistsException(String message, Throwable cause) {
-        super(message, cause);
+    public ObjectAlreadyExistsException(String message) {
+        super(message);
     }
 }

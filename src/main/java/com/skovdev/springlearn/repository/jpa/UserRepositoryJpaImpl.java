@@ -33,13 +33,13 @@ public class UserRepositoryJpaImpl implements UserRepository {
     }
 
     @Override
-    public void createUser(User user) {
+    public User createUser(User user) {
         Set<Role> roles = roleRepository.findByRoleNameIn(user.getRolesAsStrings());
         if (roles.size() != user.getRoles().size()) {
             throw new IllegalArgumentException("Trying to create user with unknown roles. This roles are unknown: " + Sets.symmetricDifference(user.getRoles(), roles));
         }
         user.setRoles(roles);
-        userSpringDataRepository.save(user);
+        return userSpringDataRepository.save(user);
     }
 
     @Override

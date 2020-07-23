@@ -45,7 +45,7 @@ public class UserRepositoryJDBCImpl implements UserRepository {
 
     @Override
     @Transactional
-    public void createUser(User user) {
+    public User createUser(User user) {
         KeyHolder userIdkeyHolder = new GeneratedKeyHolder();
         try {
             jdbcTemplate.update(
@@ -62,12 +62,12 @@ public class UserRepositoryJDBCImpl implements UserRepository {
                     },
                     userIdkeyHolder);
         } catch (DuplicateKeyException e) {
-            throw new ObjectAlreadyExistsException("User with login " + user.getLogin() + " already exists", e);
+            throw new ObjectAlreadyExistsException("User with login " + user.getLogin() + " already exists");
         }
-
+        User createdUser = getUser(user.getLogin()).get();
         if (isEmpty(user.getRoles())) {
             log.warn("Created user with login = " + user.getLogin() + " doesn't have any roles");
-            return;
+            return createdUser;
         }
 
         MapSqlParameterSource parameters = new MapSqlParameterSource();
@@ -84,6 +84,7 @@ public class UserRepositoryJDBCImpl implements UserRepository {
         for (Number roleId : rolesId) {
             jdbcTemplate.update(INSERT_ROLE_TO_USER, roleId, userId);
         }
+        return createdUser;
     }
 
     @Override

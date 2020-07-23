@@ -8,7 +8,7 @@ public interface UserRepository {
     /**
      * @throws com.skovdev.springlearn.error.exceptions.ObjectAlreadyExistsException if user with such {@link User#getLogin()} already exists
      */
-    void createUser(User user);
+    User createUser(User user);
 
     Optional<User> getUser(String login);
 

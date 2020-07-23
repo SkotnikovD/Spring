@@ -10,7 +10,6 @@ import com.skovdev.springlearn.model.User;
 import com.skovdev.springlearn.repository.FilesRepository;
 import com.skovdev.springlearn.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -43,7 +42,7 @@ public class UserServiceImpl implements UserService {
     /**
      * Registers new user with {@link Role#ROLE_USER} role
      *
-     * @param signUpUserDto - user to sign up
+     * @param signUpUserDto      - user to sign up
      * @param thumbnailAvatarUrl
      * @param fullsizeAvatarUrl
      * @return created user
@@ -56,13 +55,11 @@ public class UserServiceImpl implements UserService {
         user.addRole(new Role().setRoleName(Role.ROLE_USER));
         user.setPassword(bCryptPasswordEncoder.encode(signUpUserDto.getPassword()));
         user.setAvatarFullsizeUrl(fullsizeAvatarUrl).setAvatarThumbnailUrl(thumbnailAvatarUrl);
-        try {
-            userRepository.createUser(user);
-        } catch (DuplicateKeyException e) {
-            throw new ObjectAlreadyExistsException("User with login " + user.getLogin() + " already exists", e);
-        }
-
-        return getUser(user.getLogin()).get();
+        userRepository.getUser(user.getLogin()).ifPresent((u) -> {
+            throw new ObjectAlreadyExistsException("User with login " + user.getLogin() + " already exists");
+        });
+        User createdUser = userRepository.createUser(user);
+        return toGetFullUserDto(createdUser);
     }
 
     @Override
