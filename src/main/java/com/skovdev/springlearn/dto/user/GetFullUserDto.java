@@ -6,11 +6,14 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 @Getter
 @Setter
 @Accessors(chain = true)
-public class GetUserDto {
+public class GetFullUserDto {
+
+    private String login;
 
     private String name;
 
@@ -21,4 +24,5 @@ public class GetUserDto {
 
     private String avatarFullsizeUrl;
 
+    private Set<String> roles;
 }

@@ -1,7 +1,7 @@
 package com.skovdev.springlearn.controller;
 
 import com.google.common.collect.ImmutableSet;
-import com.skovdev.springlearn.dto.user.GetUserDto;
+import com.skovdev.springlearn.dto.user.GetFullUserDto;
 import com.skovdev.springlearn.dto.user.SignUpUserDto;
 import com.skovdev.springlearn.dto.user.UpdateUserDto;
 import com.skovdev.springlearn.error.exceptions.NoSuchObjectException;
@@ -45,19 +45,19 @@ public class UserController {
 
     @ApiResponses(value = {@ApiResponse(code = 404, message = "There is no user with login = 'input login'", response = ApiError.class)})
     @GetMapping()
-    public GetUserDto getUser(@RequestParam("login") String login) {
-        Optional<GetUserDto> user = userService.getUser(login);
+    public GetFullUserDto getUser(@RequestParam("login") String login) {
+        Optional<GetFullUserDto> user = userService.getUser(login);
         return user.orElseThrow(() -> new NoSuchObjectException("There is no user with login = " + login));
     }
 
     @PostMapping("/signup")
     @ResponseStatus(HttpStatus.CREATED)
-    public GetUserDto createUser(@RequestBody @Valid SignUpUserDto signupUserDto) {
+    public GetFullUserDto createUser(@RequestBody @Valid SignUpUserDto signupUserDto) {
         return userService.registerNewUser(signupUserDto);
     }
 
     @GetMapping("/current")
-    public GetUserDto getCurrentUser() {
+    public GetFullUserDto getCurrentUser() {
         return userService.getCurrentUser();
     }
 
@@ -80,7 +80,7 @@ public class UserController {
     }
 
     @PutMapping("/current")
-    public GetUserDto updateCurrentUser(@RequestBody @Valid UpdateUserDto userDto) {
+    public GetFullUserDto updateCurrentUser(@RequestBody @Valid UpdateUserDto userDto) {
         return userService.updateCurrentUser(userDto);
     }
 }

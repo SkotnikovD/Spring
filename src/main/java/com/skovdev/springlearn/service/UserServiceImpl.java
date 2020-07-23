@@ -1,6 +1,7 @@
 package com.skovdev.springlearn.service;
 
-import com.skovdev.springlearn.dto.user.GetUserDto;
+import com.skovdev.springlearn.dto.mapper.UserMapper;
+import com.skovdev.springlearn.dto.user.GetFullUserDto;
 import com.skovdev.springlearn.dto.user.SignUpUserDto;
 import com.skovdev.springlearn.dto.user.UpdateUserDto;
 import com.skovdev.springlearn.error.exceptions.ObjectAlreadyExistsException;
@@ -18,7 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
 
-import static com.skovdev.springlearn.dto.mapper.UserMapper.toDto;
+import static com.skovdev.springlearn.dto.mapper.UserMapper.toGetFullUserDto;
 import static com.skovdev.springlearn.dto.mapper.UserMapper.toModel;
 
 @Service
@@ -47,7 +48,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     @Transactional
-    public GetUserDto registerNewUser(SignUpUserDto signUpUserDto) {
+    public GetFullUserDto registerNewUser(SignUpUserDto signUpUserDto) {
         User user = toModel(signUpUserDto);
         user.addRole(new Role().setRoleName(Role.ROLE_USER));
         user.setPassword(bCryptPasswordEncoder.encode(signUpUserDto.getPassword()));
@@ -61,20 +62,21 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<GetUserDto> getUser(String login) {
-        return toDto(userRepository.getUser(login));
+    public Optional<GetFullUserDto> getUser(String login) {
+        Optional<User> user = userRepository.getUser(login);
+        return user.map(UserMapper::toGetFullUserDto);
     }
 
     @Override
     @Transactional
-    public GetUserDto updateCurrentUser(UpdateUserDto user) {
+    public GetFullUserDto updateCurrentUser(UpdateUserDto user) {
         User userModel = toModel(user, currentPrincipalInfoService.getCurrentUserLogin());
         User updatedUser = userRepository.updateUser(userModel);
-        return toDto(updatedUser);
+        return toGetFullUserDto(updatedUser);
     }
 
     @Override
-    public GetUserDto getCurrentUser() {
+    public GetFullUserDto getCurrentUser() {
         String username = getCurrentUserUsername();
         if (username == null) return null;
         return this.getUser(username).orElse(null);

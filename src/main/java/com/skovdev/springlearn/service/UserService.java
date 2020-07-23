@@ -1,6 +1,6 @@
 package com.skovdev.springlearn.service;
 
-import com.skovdev.springlearn.dto.user.GetUserDto;
+import com.skovdev.springlearn.dto.user.GetFullUserDto;
 import com.skovdev.springlearn.dto.user.SignUpUserDto;
 import com.skovdev.springlearn.dto.user.UpdateUserDto;
 import org.springframework.web.multipart.MultipartFile;
@@ -9,13 +9,13 @@ import java.util.Optional;
 
 public interface UserService {
 
-    GetUserDto registerNewUser(SignUpUserDto signUpUserDto);
+    GetFullUserDto registerNewUser(SignUpUserDto signUpUserDto);
 
-    Optional<GetUserDto> getUser(String login);
+    Optional<GetFullUserDto> getUser(String login);
 
-    GetUserDto updateCurrentUser(UpdateUserDto user);
+    GetFullUserDto updateCurrentUser(UpdateUserDto user);
 
-    GetUserDto getCurrentUser();
+    GetFullUserDto getCurrentUser();
 
     String addAvatar(MultipartFile avatar);
 }

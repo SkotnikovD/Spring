@@ -1,14 +1,14 @@
 package com.skovdev.springlearn.dto.mapper;
 
+import com.skovdev.springlearn.dto.user.GetFullUserDto;
 import com.skovdev.springlearn.dto.user.GetUserDto;
 import com.skovdev.springlearn.dto.user.SignUpUserDto;
 import com.skovdev.springlearn.dto.user.UpdateUserDto;
 import com.skovdev.springlearn.model.Role;
 import com.skovdev.springlearn.model.User;
 import com.skovdev.springlearn.model.google.GoogleUser;
-import org.apache.commons.lang3.RandomStringUtils;
 
-import java.util.Optional;
+import javax.validation.constraints.NotNull;
 import java.util.stream.Collectors;
 
 // TODO try to use http://modelmapper.org/getting-started/ for such straight-line conversations
@@ -19,12 +19,7 @@ public class UserMapper {
                 .setName(user.getFirstName())
                 .setBirthdayDate(user.getBirthdayDate())
                 .setAvatarFullsizeUrl(user.getAvatarFullsizeUrl())
-                .setAvatarThumbnailUrl(user.getAvatarThumbnailUrl())
-                .setRoles(user.getRoles().stream().map(Role::getRoleName).collect(Collectors.toSet()));
-    }
-
-    public static Optional<GetUserDto> toDto(Optional<User> user) {
-        return user.map(UserMapper::toDto);
+                .setAvatarThumbnailUrl(user.getAvatarThumbnailUrl());
     }
 
     public static User toModel(UpdateUserDto updateUserDto, String login) {
@@ -45,12 +40,20 @@ public class UserMapper {
                 .setPassword(signUpUserDto.getPassword());
     }
 
-    public static SignUpUserDto toDto(GoogleUser googleUser) {
+    public static SignUpUserDto toDto(@NotNull GoogleUser googleUser, @NotNull String password) {
         return new SignUpUserDto()
                 .setName(googleUser.getUserName())
                 .setLogin(googleUser.getEmail())
-                //Hacky, but seems acceptable and secure. Ok as temporary solution
-                .setPassword(RandomStringUtils.random(50, true, true));
+                .setPassword(password);
+    }
+
+    public static GetFullUserDto toGetFullUserDto(User user) {
+        return new GetFullUserDto()
+                .setName(user.getFirstName())
+                .setBirthdayDate(user.getBirthdayDate())
+                .setAvatarFullsizeUrl(user.getAvatarFullsizeUrl())
+                .setAvatarThumbnailUrl(user.getAvatarThumbnailUrl())
+                .setRoles(user.getRoles().stream().map(Role::getRoleName).collect(Collectors.toSet()));
     }
 
 }
