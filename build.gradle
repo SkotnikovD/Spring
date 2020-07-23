@@ -50,6 +50,7 @@ dependencies {
 	implementation group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
 	implementation 'io.springfox:springfox-swagger-ui:2.9.2'
 	implementation 'io.springfox:springfox-bean-validators:2.9.2'
+	implementation 'com.google.api-client:google-api-client:1.30.9'
 }
 
 test {

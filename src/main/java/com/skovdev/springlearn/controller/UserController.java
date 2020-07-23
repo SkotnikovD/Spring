@@ -53,8 +53,6 @@ public class UserController {
     @PostMapping("/signup")
     @ResponseStatus(HttpStatus.CREATED)
     public GetUserDto createUser(@RequestBody @Valid SignUpUserDto signupUserDto) {
-        if (signupUserDto.getName().equals("throw"))
-            throw new RestApiException(HttpStatus.EXPECTATION_FAILED, "В следующий раз повезет");
         return userService.registerNewUser(signupUserDto);
     }
 

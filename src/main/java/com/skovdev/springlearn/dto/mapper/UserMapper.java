@@ -5,6 +5,8 @@ import com.skovdev.springlearn.dto.user.SignUpUserDto;
 import com.skovdev.springlearn.dto.user.UpdateUserDto;
 import com.skovdev.springlearn.model.Role;
 import com.skovdev.springlearn.model.User;
+import com.skovdev.springlearn.model.google.GoogleUser;
+import org.apache.commons.lang3.RandomStringUtils;
 
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -43,5 +45,12 @@ public class UserMapper {
                 .setPassword(signUpUserDto.getPassword());
     }
 
+    public static SignUpUserDto toDto(GoogleUser googleUser) {
+        return new SignUpUserDto()
+                .setName(googleUser.getUserName())
+                .setLogin(googleUser.getEmail())
+                //Hacky, but seems acceptable and secure. Ok as temporary solution
+                .setPassword(RandomStringUtils.random(50, true, true));
+    }
 
 }

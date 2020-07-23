@@ -37,6 +37,9 @@ public class SecurityConfig {
         @Autowired
         private CustomUserDetailsService customUserDetailsService;
 
+        @Autowired
+        private JwtService jwtService;
+
         @Override
         protected void configure(AuthenticationManagerBuilder auth) throws Exception {
             auth
@@ -55,13 +58,14 @@ public class SecurityConfig {
                     .antMatchers("/api/users/signup").permitAll()
                     .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                     .antMatchers(HttpMethod.GET, "/api/posts").permitAll()
+                    .antMatchers(HttpMethod.PUT, "/api/auth/google/tokensignin").permitAll()
                 .anyRequest()
                     .authenticated()
                 .and()
                 .exceptionHandling()
                     .authenticationEntryPoint((req, rsp, e) -> rsp.sendError(HttpServletResponse.SC_UNAUTHORIZED))
                 .and()
-                .addFilter(new ApiJWTSigninProcessingFilter(authenticationManager()))
+                .addFilter(new ApiJWTSigninProcessingFilter(authenticationManager(), jwtService))
                 .addFilter(new ApiJWTAuthenticationProcessingFilter(authenticationManager()))
                 .sessionManagement()
                     .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
