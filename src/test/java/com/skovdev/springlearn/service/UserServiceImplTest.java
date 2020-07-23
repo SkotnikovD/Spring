@@ -58,7 +58,7 @@ class UserServiceImplTest {
                 .setRoles(Role.ROLE_USER);
         when(userRepositoryMock.getUser("fu@bar.com")).thenReturn(Optional.of(newUserFromStorage));
 
-        GetUserDto createdUserDto = userService.registerNewUser(newUserDto);
+        GetUserDto createdUserDto = userService.registerNewUser(newUserDto, , );
 
         assertThat(createdUserDto.getLogin()).isEqualTo("fu@bar.com");
         assertThat(createdUserDto.getName()).isEqualTo("Shalayn");
@@ -83,7 +83,7 @@ class UserServiceImplTest {
                 .setBirthdayDate(LocalDate.of(2000, 10, 10));
         when(userRepositoryMock.getUser("fu@bar.com")).thenReturn(Optional.of(newUserFromStorage));
 
-        userService.registerNewUser(newUserDto);
+        userService.registerNewUser(newUserDto, , );
 
         ArgumentCaptor<User> requestCaptor = ArgumentCaptor.forClass(User.class);
         verify(userRepositoryMock, times(1)).createUser(requestCaptor.capture());

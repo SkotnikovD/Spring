@@ -39,7 +39,7 @@ public class AuthService {
             //XXX: Using randomly generated password for new users created via Google signin
             String random = RandomStringUtils.random(50, true, true);
             SignUpUserDto newUser = UserMapper.toDto(googleUser, random);
-            GetFullUserDto createdUser = userService.registerNewUser(newUser);
+            GetFullUserDto createdUser = userService.registerNewUser(newUser, googleUser.getAvatarUrl(), googleUser.getAvatarUrl());
             String jwtToken = jwtService.createJwtToken(newUser.getLogin(), createdUser.getRoles());
             return new SocialSignInResult(jwtToken, true);
         } else {

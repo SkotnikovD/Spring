@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Nullable;
 import java.util.Optional;
 
 import static com.skovdev.springlearn.dto.mapper.UserMapper.toGetFullUserDto;
@@ -43,15 +44,18 @@ public class UserServiceImpl implements UserService {
      * Registers new user with {@link Role#ROLE_USER} role
      *
      * @param signUpUserDto - user to sign up
+     * @param thumbnailAvatarUrl
+     * @param fullsizeAvatarUrl
      * @return created user
      * @throws ObjectAlreadyExistsException if user with such login already exists
      */
     @Override
     @Transactional
-    public GetFullUserDto registerNewUser(SignUpUserDto signUpUserDto) {
+    public GetFullUserDto registerNewUser(SignUpUserDto signUpUserDto, @Nullable String thumbnailAvatarUrl, @Nullable String fullsizeAvatarUrl) {
         User user = toModel(signUpUserDto);
         user.addRole(new Role().setRoleName(Role.ROLE_USER));
         user.setPassword(bCryptPasswordEncoder.encode(signUpUserDto.getPassword()));
+        user.setAvatarFullsizeUrl(fullsizeAvatarUrl).setAvatarThumbnailUrl(thumbnailAvatarUrl);
         try {
             userRepository.createUser(user);
         } catch (DuplicateKeyException e) {

@@ -4,6 +4,7 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
+import com.google.common.base.Strings;
 import com.skovdev.springlearn.model.google.GoogleUser;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +37,8 @@ public class GoogleSigninService {
                     .setUserId(payload.getSubject())
                     .setUserName((String) payload.get("name"))
                     .setIsEmailVerified(payload.getEmailVerified())
-                    .setAvatarUrl((String) payload.get("picture"));
+                    .setAvatarUrl(Strings.emptyToNull((String) payload.get("picture")));
+
         } else {
             throw new RuntimeException("Google ID token is invalid.");
         }

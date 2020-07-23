@@ -13,6 +13,9 @@ public class GoogleUser {
 
     String userName;
 
+    /**
+     * Never is empty string: always url or null
+     */
     String avatarUrl;
 
     Boolean isEmailVerified;

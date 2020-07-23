@@ -53,7 +53,7 @@ public class UserController {
     @PostMapping("/signup")
     @ResponseStatus(HttpStatus.CREATED)
     public GetFullUserDto createUser(@RequestBody @Valid SignUpUserDto signupUserDto) {
-        return userService.registerNewUser(signupUserDto);
+        return userService.registerNewUser(signupUserDto, null, null);
     }
 
     @GetMapping("/current")
