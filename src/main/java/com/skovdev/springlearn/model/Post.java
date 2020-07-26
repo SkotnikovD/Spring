@@ -15,7 +15,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import java.time.Instant;
 
-import static javax.persistence.FetchType.LAZY;
+import static javax.persistence.FetchType.EAGER;
 
 @Getter
 @Setter
@@ -36,7 +36,7 @@ public class Post {
     @Column(name = "created_at")
     private Instant createdDate;
 
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne(fetch = EAGER)
     @JoinColumn(name = "fk_user_id", nullable = false)
     private User author;
 

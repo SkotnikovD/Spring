@@ -7,6 +7,7 @@ import com.skovdev.springlearn.model.Post;
 import com.skovdev.springlearn.model.User;
 import com.skovdev.springlearn.repository.PostRepository;
 import com.skovdev.springlearn.repository.UserRepository;
+import com.skovdev.springlearn.repository.jpa.paging.PageRequestByCursorOnId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,19 +20,17 @@ import java.util.Collection;
 public class PostServiceImpl implements PostService {
 
     private PostRepository postRepository;
-    private UserRepository userRepository;
     private CurrentPrincipalInfoService currentPrincipalInfoService;
 
     @Autowired
     public PostServiceImpl(PostRepository postRepository, UserRepository userRepository, CurrentPrincipalInfoService currentPrincipalInfoService) {
         this.postRepository = postRepository;
-        this.userRepository = userRepository;
         this.currentPrincipalInfoService = currentPrincipalInfoService;
     }
 
     @Override
-    public Collection<PostWithAuthorDto> getPosts() {
-        return PostMapper.toDto(postRepository.getPosts());
+    public Collection<PostWithAuthorDto> getPosts(PageRequestByCursorOnId pageById) {
+        return PostMapper.toDto(postRepository.getPosts(pageById));
     }
 
     @Override
@@ -47,7 +46,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @Transactional
-    public void deletePost(long id) {
+    public void deletePost(int id) {
         postRepository.deletePost(id);
     }
 

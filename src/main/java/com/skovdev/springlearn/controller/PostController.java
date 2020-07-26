@@ -2,10 +2,12 @@ package com.skovdev.springlearn.controller;
 
 import com.skovdev.springlearn.dto.CreatePostDto;
 import com.skovdev.springlearn.dto.PostWithAuthorDto;
+import com.skovdev.springlearn.repository.jpa.paging.PageRequestByCursorOnId;
 import com.skovdev.springlearn.service.PostService;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
@@ -26,10 +29,14 @@ public class PostController {
     @Autowired
     private PostService postService;
 
-    @ApiOperation(value = "Get all posts at ones")
+    @ApiOperation(value = "Get bunch(page) of posts starting (excluding) from specified id. Ids are ordered descending, means newest posts first.")
     @GetMapping()
-    public Collection<PostWithAuthorDto> getPosts() {
-        return postService.getPosts();
+    public Collection<PostWithAuthorDto> getPosts(
+            @ApiParam(value = "Post id from which you want new page to start (this id is excluded from result). The newest posts will be returned, if this parameter is omitted.")
+                @RequestParam(name = "lastId", required = false) Integer fromId,
+            @ApiParam(value = "Number of posts to return.")
+                @RequestParam(name = "pageSize") int pageSize) {
+        return postService.getPosts(new PageRequestByCursorOnId(fromId, pageSize));
     }
 
     @ApiImplicitParams({
@@ -42,7 +49,7 @@ public class PostController {
 
     @DeleteMapping(value = "/{id}")
     @Secured("ADMIN")
-    public void deletePost(@PathVariable long id){
+    public void deletePost(@PathVariable int id){
         postService.deletePost(id);
     }
 }

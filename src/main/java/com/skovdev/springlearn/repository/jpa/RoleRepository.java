@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 import java.util.Set;
 
 @Repository
-interface RoleRepository extends JpaRepository<Role, Long> {
+interface RoleRepository extends JpaRepository<Role, Integer> {
      Set<Role> findByRoleNameIn(Set<String> roleName);
 }

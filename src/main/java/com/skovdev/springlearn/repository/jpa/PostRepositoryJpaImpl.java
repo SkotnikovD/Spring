@@ -1,12 +1,10 @@
 package com.skovdev.springlearn.repository.jpa;
 
-import com.cosium.spring.data.jpa.entity.graph.domain.EntityGraph;
-import com.cosium.spring.data.jpa.entity.graph.domain.EntityGraphUtils;
-import com.google.common.collect.Lists;
 import com.skovdev.springlearn.model.Post;
 import com.skovdev.springlearn.repository.PostRepository;
+import com.skovdev.springlearn.repository.jpa.paging.PageRequestByCursorOnId;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,12 +24,11 @@ public class PostRepositoryJpaImpl implements PostRepository {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Post> getPosts() {
-        EntityGraph entityGraph = EntityGraphUtils.fromAttributePaths("author.roles");
-        Sort sortingByCreatedDate = Sort.by(Sort.Direction.DESC, "createdDate");
-        Iterable<Post> result = postSpringDataRepository.findAll(sortingByCreatedDate, entityGraph);
-        return Lists.newArrayList(result);
+    public List<Post> getPosts(PageRequestByCursorOnId pageById) {
+        int lastId = pageById.getFromId()==null ? Integer.MAX_VALUE : pageById.getFromId(); //Hacky, but works fine. For the sake of simplicity don't want dynamic queries
+        return postSpringDataRepository.findAllWithCursorPagination(lastId, PageRequest.of(0, pageById.getPageSize()));
     }
+
 
     @Override
     public long createPost(Post post) {
@@ -39,7 +36,7 @@ public class PostRepositoryJpaImpl implements PostRepository {
     }
 
     @Override
-    public void deletePost(long id) {
+    public void deletePost(int id) {
         postSpringDataRepository.deleteById(id);
     }
 }
